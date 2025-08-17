@@ -320,16 +320,25 @@
       });
     }
 
-    function buildCSV(){
-      const rows=[['SKU','Quantity']];
-      Object.values(CART).forEach(it=>rows.push([it.sku, it.qty]));
-      return rows.map(r=>r.map(v=>/[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g,'""') + '"' : v).join(',')).join('\n');
-    }
+ function buildCSV(){
+  const rows = [
+    [`From: ${fromEl.value}`, `To: ${toEl.value}`, `Date: ${new Date().toLocaleString()}`],
+    ['SKU','Quantity']
+  ];
+  Object.values(CART).forEach(it => rows.push([it.sku, it.qty]));
+  return rows.map(r =>
+    r.map(v => /[",\n]/.test(String(v))
+      ? '"' + String(v).replace(/"/g,'""') + '"'
+      : v
+    ).join(',')
+  ).join('\n');
+}
 
-    function fileName(){
-  const from = (fromEl.value||'').trim();
-  const to   = (toEl.value||'').trim();
-  return (from && to) ? `من_${from}_الى_${to}.csv` : 'transfer.csv';
+function fileName(){
+  const from = (fromEl.value||'').trim().replace(/\s+/g,'-');
+  const to   = (toEl.value||'').trim().replace(/\s+/g,'-');
+  const date = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'); 
+  return `transfer_${from}_to_${to}_${date}.csv`;
 }
 
     async function submitOrder(){
