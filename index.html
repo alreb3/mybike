@@ -2,378 +2,178 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>طلب تحويل بين الفروع</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>من فرع → إلى فرع</title>
   <style>
-    :root{ --bg:#ffffff; --panel:#ffffff; --text:#0b0f14; --muted:#4b5563; --line:#e5e7eb; --btn:#111111; --btnText:#ffffff; }
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
-    header{padding:18px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:10}
-    .head{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .brand{display:flex;gap:10px;align-items:center}
-    .brand img{width:34px;height:34px;border-radius:50%}
-    h1{margin:0;font-size:18px;font-weight:800}
-    label{font-size:13px;color:#374151;margin-inline-start:6px}
-    .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:end;margin-top:12px}
-    select,input{background:#ffffff;border:1px solid #cfd4dc;color:var(--text);padding:10px 12px;border-radius:10px;outline:none;width:100%}
-    .search{grid-column: span 3}
-    .hint{color:var(--muted);font-size:12px;margin-top:6px}
-    main{display:grid;grid-template-columns:1fr 360px}
-    @media(max-width:1050px){main{grid-template-columns:1fr} aside{position:static;height:auto} .row{grid-template-columns:1fr} .search{grid-column:span 1} }
-    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;padding:16px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:transform .08s}
-    .card:hover{transform:translateY(-2px)}
-    .card img{width:100%;height:170px;object-fit:cover;background:#f3f4f6;display:block}
-    .meta{padding:10px 12px}
-    .name{font-size:14px;font-weight:700;margin-bottom:4px}
-    .sku{font-size:12px;color:#6b7280}
-    .bar{display:flex;gap:6px;justify-content:space-between;align-items:center;padding:10px 12px;border-top:1px solid var(--line)}
-    .qty{display:flex;gap:6px;align-items:center}
-    .qty button{background:#f3f4f6;border:1px solid #d1d5db;color:#111;padding:6px 10px;border-radius:10px;cursor:pointer}
-    .qty input{width:58px;text-align:center}
-    .add{background:var(--btn);border:none;color:var(--btnText);padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
-    aside{border-right:1px solid var(--line);background:var(--panel);padding:14px;height:calc(100vh - 160px);position:sticky;top:160px;display:flex;flex-direction:column;gap:12px}
-    aside h2{margin:0 0 6px 0;font-size:16px}
-    .list{flex:1;overflow:auto;border:1px dashed #d1d5db;border-radius:12px;padding:8px}
-    .rowitem{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;border-bottom:1px solid #eee;padding:8px 0}
-    .rowitem:last-child{border-bottom:none}
-    .thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#f3f4f6;border:1px solid #e5e7eb}
-    .btn{background:var(--btn);border:none;color:var(--btnText);padding:12px;border-radius:12px;cursor:pointer;font-weight:700}
-    .btn.full{width:100%}
-    .note{color:#6b7280;font-size:12px}
-    .divider{height:1px;background:#eee;margin:8px 0}
-    .admin{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .admin button{padding:10px 12px;border-radius:10px;border:1px solid #111;background:#fff;color:#111;cursor:pointer}
-    .admin small{color:#6b7280}
-
-    /* Manager overlay */
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50}
-    .panel{background:#fff;width:min(1200px,94vw);height:min(90vh,800px);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #eee}
-    .panel-title{font-weight:800}
-    .close{background:#111;color:#fff;border:none;border-radius:10px;padding:8px 12px;cursor:pointer}
-    .panel-body{padding:14px;overflow:auto}
-    .mgr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-    .mgr-card{position:relative;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;background:#fff}
-    .mgr-card img{width:100%;height:150px;object-fit:cover;background:#f3f4f6;display:block}
-    .mgr-meta{padding:10px 12px}
-    .mgr-name{font-size:13px;font-weight:700;margin-bottom:4px}
-    .mgr-sku{font-size:12px;color:#6b7280}
-
-    .delete-x{position:absolute;top:8px;left:8px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ef4444;color:#fff;font-weight:900;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2)}
-    .wiggle{animation:wiggle .3s ease-in-out infinite alternate}
-    @keyframes wiggle{ from{ transform:rotate(-1.5deg) scale(1.01);} to{ transform:rotate(1.5deg) scale(1.01);} }
+    :root{--bg:#fff;--line:#e5e7eb;--btn:#111;--btnText:#fff;}
+    *{box-sizing:border-box}
+    body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#111;}
+    header{padding:1rem;text-align:center;font-size:1.25rem;font-weight:bold;border-bottom:1px solid var(--line);}
+    .flex{display:flex;gap:0.5rem;padding:1rem;}
+    select{flex:1;padding:0.5rem;border:1px solid var(--line);border-radius:6px;}
+    .container{display:flex;gap:1rem;padding:1rem;}
+    .box{flex:1;border:1px solid var(--line);border-radius:8px;padding:1rem;min-height:320px;overflow:auto;}
+    .product{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--line);}
+    .product img{width:48px;height:48px;object-fit:cover;border-radius:6px;margin-left:0.5rem;}
+    .actions{padding:1rem;text-align:center;}
+    button{background:var(--btn);color:var(--btnText);border:none;padding:0.6rem 1.2rem;border-radius:6px;cursor:pointer;font-size:1rem;}
+    input.qty{width:50px;text-align:center;}
   </style>
 </head>
 <body>
-  <header>
-    <div class="head">
-      <div class="brand">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA5CAYAAABj2ui7AAAACXBIWXMAAAsSAAALEgHS3X78AAADWElEQVRogd1b3ZHaMBDeeO6d6wB3ELuCOM9+ODoIpwouFYR0QAUOV8HBg5+PVGCuA6ggoQIyctY6IzCWVitbc98MMzecJevT/mpXfDqdTjAE0ry4B4AEAPZVKfaDvBQA2AmmeZEBQIZkYgD4fOPxgyQMAFv5qUqxZV0MF0EkNQeAGQBMHKY6AsBafqpSrJ0X5kowzQtJagEAU47FaJDSXVSlWLlMQiKY5oWU1NITMR2S6BNVolYE0VHIHX0gLtYFv6UZ2DooY4JoZ2tHG3PFEUkaSzMyeQht7XVkcoDvf0nz4sl0QK8E07xI0N584gth7ueqFHNngkOB6JF7SQZDEN6d2M6S5PeqFJ0aFhRBeHdmr5bDvnZlQcERhP8k95ZSlN41rkrxV/+HkRcdAbbJ+ATj8wXu2l+gx5wx8FkNeWJAPMgMS4+Rd9pDS6LL1vEjzYtHhzwyIY5bYjKioFQUjZuDXAOSJqAWUROKKYYbhbYNLoiTduGeOK43ePfgjEdNEHeNU3qgq4oFMsf3TlEbazQSdN21a7A+nad50VcBMIXi0xDk8JxtHKtS7AjjuNah5olQPbkPrtTaiqt6Npg0ahoxTtqGtf1hHsp5kFYEqTHnFigS5N5oRTBmnvhAzGK4/UDNKwooPHATrP2Kj2SbEh4yH+UQaddBEPQgvQYJN8G3a2cyA/giyK6ilPAQ+ywgcxMMST1rsBIkdod8EtxxEtzYDsDshTtMKUh/EGHNnwOhSU82bWoV5aqdhJCetVGfZqLmD0eMfTy6BkWQo21MCQ9espcW6jVFuPMHx8lCsz+lUY0Xde2Hh0ZQ8WkIurTHrI9HvrOXdpW7JogLpIYLivS9hod2wsFRF6VUr30SPONx1l1K82JrmVn8rEphtTGYvfyxGWMBKb2zCoXem1gYSlJ6qCWxNGHcXyfgor47aH8Qpbf3FP82VSkuVH/o/uDKE7ljV3V+MILY9fF1gWjWVUnQbZAdqJYyzn7z9IrHW+dQbwQxmM/RqfjKOZ/7mqy9BIkXgVyamKbguwiE9vPL84JtYNwet7mMl2BSPfZlvJlN7cfYi+LxI6bUXpiwwbswVicX6oXYDGPax7oQq+PDXmnW4eFS+orrBv7YPyt4w9xU2jf/zwoA4B+Ar02yhlrPfQAAAABJRU5ErkJggg==" alt="logo">
-        <h1>من فرع → إلى فرع</h1>
-      </div>
-      <div class="admin">
-        <button id="adminUpload">تحديث المنتجات</button>
-        <button id="viewProducts">📦 استعراض المنتجات</button>
-        <small>خاص بالمسؤول</small>
-        <input type="file" id="csvAdmin" accept=".csv">
-      </div>
-    </div>
-    <div class="row">
-      <div>
-        <label for="fromBranch">من فرع</label>
-        <select id="fromBranch" required><option value="" disabled selected>اختر الفرع (من)</option><option>مستودعات الغناميه</option><option>مستودعات الخرج</option><option>دراجتي النرجس</option></select>
-      </div>
-      <div>
-        <label for="toBranch">إلى فرع</label>
-        <select id="toBranch" required><option value="" disabled selected>اختر الفرع (إلى)</option><option>مستودعات الغناميه</option><option>مستودعات الخرج</option><option>دراجتي النرجس</option><option>دراجتي الخبر</option><option>دراجتي جدة</option><option>دراجتي الصحافه</option><option>دراجتي السليمانيه</option><option>دراجتي المسار الرياضي</option><option>هجين الملز</option><option>هجين الروابي</option><option>هجين المدينة المنوره</option><option>هجين حائل</option></select>
-      </div>
-      <div>
-        <label for="search">بحث</label>
-        <input class="search" type="text" id="search" placeholder="بحث بالاسم أو SKU">
-      </div>
-    </div>
-    <div class="hint">سيُنزّل ملف CSV باسم يتضمن (من/إلى). المحتوى: <b>SKU, Quantity</b>. كما سيتم إرساله إلى Zapier تلقائيًا.</div>
-  </header>
 
-  <main>
-    <section id="gallery" class="gallery"></section>
-    <aside>
-      <h2>السلة</h2>
-      <div id="cart" class="list"></div>
-      <div class="divider"></div>
-      <button class="btn full" id="submitOrder">إرسال الطلب</button>
-      <div class="note">الاختيار إلزامي للفرعين.</div>
-    </aside>
-  </main>
+<header>من فرع → إلى فرع</header>
 
-  <!-- Manager Overlay -->
-  <div class="overlay" id="manager">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">إدارة المنتجات</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button class="close" id="toggleWiggle">وضع الحذف</button>
-          <button class="close" id="closeManager">إغلاق ✕</button>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="mgr-grid" id="mgrGrid"></div>
-      </div>
-    </div>
+<div class="flex">
+  <select id="fromBranch">
+    <option value="" disabled selected>اختر الفرع (من)</option>
+    <option>Al-Ghanamiah Warehouse</option>
+    <option>Al-Kharj Warehouse</option>
+    <option>Dirajti Al-Narjis</option>
+    <option>Dirajti Al-Khobar</option>
+    <option>Dirajti Jeddah</option>
+    <option>Dirajti Al-Sahafah</option>
+    <option>Dirajti Al-Sulaimaniyah</option>
+    <option>Dirajti Al-Masar Al-Riyadi</option>
+    <option>Hajeen Al-Malaz</option>
+    <option>Hajeen Al-Ruwabi</option>
+    <option>Hajeen Al-Madinah</option>
+    <option>Hajeen Hail</option>
+  </select>
+  <select id="toBranch">
+    <option value="" disabled selected>اختر الفرع (إلى)</option>
+    <option>Al-Ghanamiah Warehouse</option>
+    <option>Al-Kharj Warehouse</option>
+    <option>Dirajti Al-Narjis</option>
+    <option>Dirajti Al-Khobar</option>
+    <option>Dirajti Jeddah</option>
+    <option>Dirajti Al-Sahafah</option>
+    <option>Dirajti Al-Sulaimaniyah</option>
+    <option>Dirajti Al-Masar Al-Riyadi</option>
+    <option>Hajeen Al-Malaz</option>
+    <option>Hajeen Al-Ruwabi</option>
+    <option>Hajeen Al-Madinah</option>
+    <option>Hajeen Hail</option>
+  </select>
+</div>
+
+<div class="container">
+  <div class="box" id="productList">
+    <strong>المنتجات</strong>
   </div>
+  <div class="box" id="cartList">
+    <strong>السلة</strong>
+  </div>
+</div>
 
-  <script>
-    const webhookURL = "https://hooks.zapier.com/hooks/catch/20490421/utyod6s/";
-    const ADMIN_CODE = "0155"; // كلمة السر لتحديث/استعراض المنتجات
-    let adminUnlocked = false;
-    let deleteMode = false;
+<div class="actions">
+  <button onclick="submitOrder()">إرسال إلى Zapier</button>
+</div>
 
-    // منتجات عينة (تتبدل عند رفع CSV)
-    let PRODUCTS = [
-  {sku:"'10572", name:"سكوتر درفت كهربائي للاطفال", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/s-l1200_b00e229d-a582-4808-b6a6-0ac455ede905.jpg?v=1744290455"},
-  {sku:"'11695", name:"دراجة هوائية - AMELIA", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/amelia--1.webp?v=1744290452"},
-  {sku:"'12001", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/7.jpg?v=1744290454"},
-  {sku:"'10327", name:"حامل سكوتر جداري", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/f7ad195dd8fe4a20e227e2ada8c4564b.png?v=1744290447"},
-  {sku:"'11061", name:"رأس منفاخ الدراجة الهوائية", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/bbn-grid-2-floor-pump-gray-7122411-detail-1.jpg?v=1744290441"},
-  {sku:"'12709", name:"حزام قفل الخوذة", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/Kids-Child-Bicycle-Helmet-Multi-sport-Adjustable-Safety-Cute-Bike-Helmet-for-Children-Skateboard-Cycling-Skate.jpg?v=1744290436"},
-  {sku:"'12700", name:"قطعة غيار خوذة", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/dido.webp?v=1744290435"},
-  {sku:"'12288", name:"عمود مرتبة دراجة هوائية من كوزون", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/HTB16DesXdfvK1RjSspfq6zzXFXaF_jpg_640x640Q90_jpg.webp?v=1744290426"},
-  {sku:"'100174", name:"ستاند دراجة هوائية", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/60c11a6f-f8de-44a9-8470-e2cf1121d754_1.067c5fa393a86238e8d9aab87e7f0caa.webp?v=1744290421"},
-  {sku:"'103265", name:"خوذة دراجات الطريق CAIRBULL", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--1.jpg?v=1744290400"},
-  {sku:"'103268", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--2.jpg?v=1744290401"},
-  {sku:"'103271", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--3.jpg?v=1744290402"},
-  {sku:"'103272", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--4.jpg?v=1744290403"},
-  {sku:"'103267", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--5.jpg?v=1744290405"},
-  {sku:"'103274", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--6.jpg?v=1744290406"},
-  {sku:"'102384", name:"أكمام لحماية الذراع من أشعة الشمس", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/2c10b92d595f2d6a8886ec9c4a3f953c.jpg?v=1744290399"},
-  {sku:"'12192", name:"دراجة هوائية - RX400", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--1.webp?v=1744290363"},
-  {sku:"'12202", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--3.webp?v=1744290368"},
-  {sku:"'12207", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--4.webp?v=1744290368"},
-  {sku:"'12190", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--5.webp?v=1744290370"},
-  {sku:"'12200", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--7.webp?v=1744290372"},
-  {sku:"'12205", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--8.webp?v=1744290373"},
-  {sku:"'12191", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--9.webp?v=1744290374"},
-  {sku:"'12201", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--11.webp?v=1744290376"},
-];
+<script>
+  const webhookURL = "https://hooks.zapier.com/hooks/catch/20490421/utyod6s/";
 
-    let CART = {}; // sku -> {sku, name, image, qty}
-
-    const gallery = document.getElementById('gallery');
-    const cartEl  = document.getElementById('cart');
-    const searchEl= document.getElementById('search');
-    const fromEl  = document.getElementById('fromBranch');
-    const toEl    = document.getElementById('toBranch');
-    const adminBtn= document.getElementById('adminUpload');
-    const adminFile= document.getElementById('csvAdmin');
-    const viewBtn = document.getElementById('viewProducts');
-
-    const mgr = document.getElementById('manager');
-    const mgrGrid = document.getElementById('mgrGrid');
-    const closeManager = document.getElementById('closeManager');
-    const toggleWiggle = document.getElementById('toggleWiggle');
-
-    // Admin file input invisible but clickable programmatically
-    adminFile.style.width="0.1px"; adminFile.style.height="0.1px"; adminFile.style.opacity="0"; adminFile.style.position="absolute"; adminFile.style.zIndex="-1";
-
-    function requireAdmin(cb){
-      if(!adminUnlocked){
-        const code = prompt('أدخل كلمة السر:');
-        if(code === ADMIN_CODE){
-          adminUnlocked = true;
-          setTimeout(()=>adminUnlocked=false, 5*60*1000);
-        } else { alert('كلمة السر غير صحيحة.'); return; }
-      }
-      cb && cb();
-    }
-
-    // Update Products (CSV upload)
-    adminBtn.addEventListener('click', ()=> requireAdmin(()=> adminFile.click()));
-
-    adminFile.addEventListener('change', async (e)=>{
-      const f = e.target.files?.[0];
-      if(!f) return;
-      const text = await f.text();
-      const list = parseShopifyCSV(text);
-      if(!list.length) { alert('لم يتم العثور على بيانات صالحة. تأكد من الأعمدة: Title, Variant SKU, Image Src'); return; }
-      PRODUCTS = list;
-      CART = {};
-      renderCart(); renderGallery();
-      alert('تم تحديث المنتجات بنجاح.');
-      adminFile.value="";
-    });
-
-    // View/Manage Products
-    viewBtn.addEventListener('click', ()=> requireAdmin(showManager));
-    closeManager.addEventListener('click', ()=> mgr.style.display='none');
-    toggleWiggle.addEventListener('click', ()=>{ deleteMode = !deleteMode; renderManager(); });
-
-    function showManager(){
-      mgr.style.display='flex';
-      renderManager();
-    }
-
-    function renderManager(){
-      mgrGrid.innerHTML='';
-      PRODUCTS.forEach((p,idx)=>{
-        const card = document.createElement('div'); card.className='mgr-card' + (deleteMode ? ' wiggle' : '');
-        const img  = document.createElement('img'); img.src=p.image||''; img.alt=p.name||p.sku||'منتج'; card.appendChild(img);
-        const meta = document.createElement('div'); meta.className='mgr-meta';
-        const name = document.createElement('div'); name.className='mgr-name'; name.textContent = p.name || p.sku;
-        const sku  = document.createElement('div'); sku.className='mgr-sku'; sku.textContent = 'باركود: ' + (p.sku||'');
-        meta.appendChild(name); meta.appendChild(sku);
-        card.appendChild(meta);
-
-        const del = document.createElement('div'); del.className='delete-x'; del.textContent='×';
-        del.title='حذف المنتج';
-        del.onclick = ()=>{
-          if(!deleteMode) return;
-          if(confirm('هل تريد حذف هذا المنتج؟')) {
-            PRODUCTS.splice(idx,1);
-            renderManager(); renderGallery();
-          }
-        };
-        card.appendChild(del);
-
-        mgrGrid.appendChild(card);
-      });
-    }
-
-    searchEl.addEventListener('input', renderGallery);
-
-    function renderGallery(){
-      const term = (searchEl.value||'').toLowerCase();
-      gallery.innerHTML='';
-      const list = PRODUCTS.filter(p=>!term || (p.name||'').toLowerCase().includes(term) || (p.sku||'').toLowerCase().includes(term));
-      if(!list.length){ const d=document.createElement('div'); d.style.color='#6b7280'; d.textContent='لا توجد منتجات.'; gallery.appendChild(d); return; }
-      list.forEach(p=>{
-        const card = document.createElement('div'); card.className='card';
-        const img  = document.createElement('img'); img.src=p.image||''; img.alt=p.name||p.sku||'منتج'; card.appendChild(img);
-        const meta = document.createElement('div'); meta.className='meta';
-        const name = document.createElement('div'); name.className='name'; name.textContent = p.name || p.sku;
-        const sku  = document.createElement('div'); sku.className='sku'; sku.textContent = 'باركود: ' + (p.sku||'');
-        meta.append(name, sku);
-        const bar  = document.createElement('div'); bar.className='bar';
-        const qty  = document.createElement('div'); qty.className='qty';
-        const minus= document.createElement('button'); minus.textContent='-'; minus.onclick=()=>add(p,-1);
-        const input= document.createElement('input'); input.type='number'; input.min='0'; input.value=getQty(p.sku); input.onchange=(e)=>setQty(p.sku, parseInt(e.target.value||'0',10));
-        const plus = document.createElement('button'); plus.textContent='+'; plus.onclick=()=>add(p,1);
-        qty.append(minus,input,plus);
-        const addB = document.createElement('button'); addB.className='add'; addB.textContent='إضافة'; addB.onclick=()=>add(p, Math.max(1, parseInt(input.value||'1',10)));
-        bar.append(qty, addB);
-        card.appendChild(meta);
-        card.appendChild(bar);
-        gallery.appendChild(card);
-      });
-    }
-
-    function parseShopifyCSV(text){
-      // Expect Shopify export columns: Title, Variant SKU, Image Src
-      const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n').filter(l=>l.trim());
-      if(!lines.length) return [];
-      const split = (row)=>{
-        const out=[]; let cur='', q=false;
-        for(let i=0;i<row.length;i++){
-          const ch=row[i];
-          if(ch=='"'){ if(q && row[i+1]=='"'){cur+='"'; i++;} else { q=!q; } }
-          else if(ch==',' && !q){ out.push(cur); cur=''; }
-          else cur+=ch;
-        }
-        out.push(cur); return out.map(x=>x.trim());
-      };
-      const headers = split(lines[0]); // keep case
-      const idxTitle = headers.indexOf('Title');
-      const idxSKU   = headers.indexOf('Variant SKU');
-      const idxImg   = headers.indexOf('Image Src');
-      const out=[];
-      for(let i=1;i<lines.length;i++){
-        const c = split(lines[i]);
-        if(!c.length) continue;
-        const name = idxTitle>-1 ? c[idxTitle] : '';
-        const sku  = idxSKU>-1   ? c[idxSKU]   : '';
-        const img  = idxImg>-1   ? c[idxImg]   : '';
-        if(!(sku && img)) continue;
-        out.push({sku, name, image: img});
-      }
-      return out;
-    }
-
-    function getQty(sku){ return CART[sku]?.qty||0; }
-    function setQty(sku,q){
-      if(q<=0) delete CART[sku];
-      else { if(!CART[sku]){ const p = PRODUCTS.find(x=>x.sku===sku) || {sku}; CART[sku] = {sku: p.sku, name: p.name, image: p.image, qty: 0}; } CART[sku].qty=q; }
-      renderCart(); renderGallery();
-    }
-    function add(p,n){ const q=(CART[p.sku]?.qty||0)+n; setQty(p.sku,q); }
-
-    function renderCart(){
-      cartEl.innerHTML='';
-      const keys = Object.keys(CART);
-      if(!keys.length){ cartEl.innerHTML='<div class="note">السلة فارغة.</div>'; return; }
-      keys.forEach(k=>{
-        const it=CART[k];
-        const row=document.createElement('div'); row.className='rowitem';
-        const img=document.createElement('img'); img.className='thumb'; img.src=it.image||''; img.alt=it.name||it.sku||'منتج';
-        const meta=document.createElement('div'); meta.innerHTML = `<div style="font-weight:700">${it.name||it.sku}</div><div style="color:#6b7280;font-size:12px">SKU: ${it.sku}</div>`;
-        const q=document.createElement('div'); q.textContent = 'x ' + it.qty;
-        row.append(img, meta, q);
-        cartEl.appendChild(row);
-      });
-    }
-
- function fileName(){
-  const date = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'); 
-  return `transfer_${date}.csv`;   // اسم بسيط آمن
-}
-
-function buildCSV(){
-  const rows = [
-    [`From Branch: ${fromEl.value}`, `To Branch: ${toEl.value}`, `Date: ${new Date().toLocaleString()}`],
-    ['SKU','Quantity']
+  const PRODUCTS = [
+    {sku:"'10572", name:"Electric Drift Scooter for Kids", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/s-l1200_b00e229d-a582-4808-b6a6-0ac455ede905.jpg?v=1744290455"},
+    {sku:"'11695", name:"Bicycle - AMELIA", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/amelia--1.webp?v=1744290452"},
+    {sku:"'10327", name:"Wall Scooter Holder", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/f7ad195dd8fe4a20e227e2ada8c4564b.png?v=1744290447"},
+    {sku:"'10001", name:"Mountain Bike - Falcon 29\"", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/mountain-bike.jpg?v=1744290401"},
+    {sku:"'10002", name:"City Bike - Urban Rider", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/city-bike.jpg?v=1744290402"},
+    {sku:"'10003", name:"Folding Bike - Compact X", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/folding-bike.jpg?v=1744290403"},
+    {sku:"'10004", name:"Helmet - Pro Safety", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/helmet.jpg?v=1744290404"},
+    {sku:"'10005", name:"Cycling Gloves", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/gloves.jpg?v=1744290405"},
+    {sku:"'10006", name:"Scooter Dido F70", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/dido-f70.jpg?v=1744290406"},
+    {sku:"'10007", name:"Kids Bicycle - Bella 16\"", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/kids-bike.jpg?v=1744290407"},
+    {sku:"'10008", name:"Electric Bike V8", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/ebike-v8.jpg?v=1744290408"},
+    {sku:"'10009", name:"BMX Bike - Stunt Pro", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/bmx.jpg?v=1744290409"},
+    {sku:"'10010", name:"Rear Light LED", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rear-light.jpg?v=1744290410"},
+    {sku:"'10011", name:"Front Light LED", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/front-light.jpg?v=1744290411"},
+    {sku:"'10012", name:"Air Pump - Portable", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/pump.jpg?v=1744290412"},
+    {sku:"'10013", name:"Lock - Anti Theft", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/lock.jpg?v=1744290413"},
+    {sku:"'10014", name:"Cycling Bottle", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/bottle.jpg?v=1744290414"},
+    {sku:"'10015", name:"Cycling Shoes", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/shoes.jpg?v=1744290415"},
+    {sku:"'10016", name:"E-Scooter Charger", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/charger.jpg?v=1744290416"},
+    {sku:"'10017", name:"Basket - Front", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/basket.jpg?v=1744290417"}
   ];
-  Object.values(CART).forEach(it => rows.push([it.sku, it.qty]));
-  return rows.map(r =>
-    r.map(v => /[",\n]/.test(String(v))
-      ? '"' + String(v).replace(/"/g,'""') + '"'
-      : v
-    ).join(',')
-  ).join('\n');
-}
 
-    async function submitOrder(){
-      if(!fromEl.value || !toEl.value){ alert('يجب اختيار الفرعين (من/إلى).'); return; }
-      if(!Object.keys(CART).length){ alert('السلة فارغة.'); return; }
-      const csv = buildCSV();
-      const name = fileName();
+  const CART = {};
 
-      // تنزيل الملف
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  function renderProducts(){
+    const prodDiv = document.getElementById("productList");
+    prodDiv.innerHTML = "<strong>المنتجات</strong>";
+    PRODUCTS.forEach(p=>{
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <div style="display:flex;align-items:center;">
+          <img src="${p.image}" alt="">
+          <div>
+            <div>${p.name}</div>
+            <small>${p.sku}</small>
+          </div>
+        </div>
+        <button onclick="addToCart('${p.sku}')">+</button>`;
+      prodDiv.appendChild(div);
+    });
+  }
 
-     // Send CSV directly to Zapier
-try {
-  const form = new FormData();
-  form.append('file', new Blob([csv], { type: 'text/csv' }), name);
-  form.append('file_name', name);
-  form.append('from_branch', fromEl.value);
-  form.append('to_branch', toEl.value);
+  function renderCart(){
+    const cartDiv = document.getElementById("cartList");
+    cartDiv.innerHTML = "<strong>السلة</strong>";
+    Object.keys(CART).forEach(sku=>{
+      const item = PRODUCTS.find(p=>p.sku===sku);
+      const qty = CART[sku];
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <div>${item.name} (${sku})</div>
+        <input class="qty" type="number" min="1" value="${qty}" onchange="updateQty('${sku}', this.value)">
+        <button onclick="removeFromCart('${sku}')">×</button>`;
+      cartDiv.appendChild(div);
+    });
+  }
 
-  await fetch("https://hooks.zapier.com/hooks/catch/20490421/utyod6s/", {
-    method: 'POST',
-    body: form
-  });
+  function addToCart(sku){
+    CART[sku] = (CART[sku]||0)+1;
+    renderCart();
+  }
 
-  alert('تم إرسال الطلب إلى Zapier + تم تنزيل CSV.');
-} catch(e) {
-  alert('CSV downloaded, but sending to Zapier may have failed.');
-}
+  function updateQty(sku, val){
+    const q = parseInt(val);
+    if(q > 0) CART[sku] = q;
+    else delete CART[sku];
+    renderCart();
+  }
 
-    }
+  function removeFromCart(sku){
+    delete CART[sku];
+    renderCart();
+  }
 
-    document.getElementById('submitOrder').onclick = submitOrder;
+  function buildCSV(){
+    const rows = ["SKU,Quantity"];
+    Object.entries(CART).forEach(([sku, qty]) => rows.push(`${sku},${qty}`));
+    return rows.join("\n");
+  }
 
-    // init
-    renderCart(); renderGallery();
-  </script>
+  function submitOrder(){
+    const from = document.getElementById("fromBranch").value;
+    const to = document.getElementById("toBranch").value;
+    if(!from || !to){ alert("يجب اختيار الفرعين (من/إلى)."); return; }
+    if(!Object.keys(CART).length){ alert("السلة فارغة."); return; }
+    const csv = buildCSV();
+
+    fetch(webhookURL, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ fromBranch: from, toBranch: to, csv })
+    })
+    .then(res => res.text())
+    .then(_ => alert("تم إرسال الطلب إلى Zapier بنجاح."))
+    .catch(_ => alert("خطأ أثناء الإرسال إلى Zapier."));
+  }
+
+  renderProducts();
+</script>
 </body>
 </html>
