@@ -1370,24 +1370,25 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 
-      // إرسال إلى Zapier (no-cors لتجنب CORS محليًا)
-      try{
-        await fetch("https://hooks.zapier.com/hooks/catch/20490421/utyod6s/", {
-          method:'POST',
-          mode:'no-cors',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            file_name: name,
-            from_branch: fromEl.value,
-            to_branch: toEl.value,
-            csv_text: csv,
-            items: Object.values(CART)
-          })
-        });
-        alert('تم إرسال الطلب (قد لا يظهر تأكيد من Zapier)، وتم تنزيل CSV.');
-      }catch(e){
-        alert('تم تنزيل CSV، لكن ربما تم حظر الإرسال إلى Zapier من المتصفح.');
-      }
+      // إرسال إلى Zapier كـملف CSV عبر FormData
+try {
+  const form = new FormData();
+  form.append('file', new Blob([csv], { type: 'text/csv' }), name);
+  form.append('file_name', name);
+  form.append('from_branch', fromEl.value);
+  form.append('to_branch', toEl.value);
+  form.append('items_json', JSON.stringify(Object.values(CART)));
+
+  await fetch("https://hooks.zapier.com/hooks/catch/20490421/utyod6s/", {
+    method: 'POST',
+    body: form,
+    // mode:'no-cors' إذا واجهت مشكلة CORS
+  });
+
+  alert('تم إرسال الطلب إلى Zapier + تم تنزيل CSV.');
+} catch(e) {
+  alert('تم تنزيل CSV، لكن ربما تم حظر الإرسال إلى Zapier من المتصفح.');
+}
     }
 
     document.getElementById('submitOrder').onclick = submitOrder;
