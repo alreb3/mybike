@@ -321,8 +321,10 @@
     }
 
  function fileName(){
+  const from = (fromEl.value||'').trim().replace(/\s+/g,'-');
+  const to   = (toEl.value||'').trim().replace(/\s+/g,'-');
   const date = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'); 
-  return `transfer_${date}.csv`;   // اسم بسيط آمن
+  return `transfer_${from}_to_${to}_${date}.csv`;
 }
 
 function buildCSV(){
