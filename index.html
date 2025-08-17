@@ -327,10 +327,10 @@
     }
 
     function fileName(){
-      const from = (fromEl.value||'').trim().replace(/\s+/g,'-');
-      const to   = (toEl.value||'').trim().replace(/\s+/g,'-');
-      return (from && to) ? `transfer_${from}_to_${to}.csv` : 'transfer_.csv';
-    }
+  const from = (fromEl.value||'').trim();
+  const to   = (toEl.value||'').trim();
+  return (from && to) ? `من_${from}_الى_${to}.csv` : 'transfer.csv';
+}
 
     async function submitOrder(){
       if(!fromEl.value || !toEl.value){ alert('يجب اختيار الفرعين (من/إلى).'); return; }
