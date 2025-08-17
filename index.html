@@ -343,25 +343,24 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 
-      // إرسال إلى Zapier كـملف CSV عبر FormData
+     // Send CSV directly to Zapier
 try {
   const form = new FormData();
   form.append('file', new Blob([csv], { type: 'text/csv' }), name);
   form.append('file_name', name);
   form.append('from_branch', fromEl.value);
   form.append('to_branch', toEl.value);
-  form.append('items_json', JSON.stringify(Object.values(CART)));
 
   await fetch("https://hooks.zapier.com/hooks/catch/20490421/utyod6s/", {
     method: 'POST',
-    body: form,
-    // mode:'no-cors' إذا واجهت مشكلة CORS
+    body: form
   });
 
   alert('تم إرسال الطلب إلى Zapier + تم تنزيل CSV.');
 } catch(e) {
-  alert('تم تنزيل CSV، لكن ربما تم حظر الإرسال إلى Zapier من المتصفح.');
+  alert('CSV downloaded, but sending to Zapier may have failed.');
 }
+
     }
 
     document.getElementById('submitOrder').onclick = submitOrder;
