@@ -1,179 +1,169 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>من فرع → إلى فرع</title>
+  <meta charset="UTF-8">
+  <title>Store Transfer</title>
   <style>
-    :root{--bg:#fff;--line:#e5e7eb;--btn:#111;--btnText:#fff;}
-    *{box-sizing:border-box}
-    body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#111;}
-    header{padding:1rem;text-align:center;font-size:1.25rem;font-weight:bold;border-bottom:1px solid var(--line);}
-    .flex{display:flex;gap:0.5rem;padding:1rem;}
-    select{flex:1;padding:0.5rem;border:1px solid var(--line);border-radius:6px;}
-    .container{display:flex;gap:1rem;padding:1rem;}
-    .box{flex:1;border:1px solid var(--line);border-radius:8px;padding:1rem;min-height:320px;overflow:auto;}
-    .product{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--line);}
-    .product img{width:48px;height:48px;object-fit:cover;border-radius:6px;margin-left:0.5rem;}
-    .actions{padding:1rem;text-align:center;}
-    button{background:var(--btn);color:var(--btnText);border:none;padding:0.6rem 1.2rem;border-radius:6px;cursor:pointer;font-size:1rem;}
-    input.qty{width:50px;text-align:center;}
+    body { font-family: Arial, sans-serif; background: #fff; margin: 20px; }
+    h2 { text-align: center; }
+    select, input, button { padding: 8px; margin: 5px; }
+    #products, #cart { border: 1px solid #ccc; padding: 10px; min-height: 200px; margin-top: 10px; }
+    .item { display: flex; justify-content: space-between; margin: 5px 0; }
+    .item button { margin-left: 10px; }
+    #cart .item input { width: 50px; margin-left: 5px; }
   </style>
 </head>
 <body>
 
-<header>من فرع → إلى فرع</header>
+  <h2>From Branch ➝ To Branch</h2>
 
-<div class="flex">
-  <select id="fromBranch">
-    <option value="" disabled selected>اختر الفرع (من)</option>
-    <option>Al-Ghanamiah Warehouse</option>
-    <option>Al-Kharj Warehouse</option>
-    <option>Dirajti Al-Narjis</option>
-    <option>Dirajti Al-Khobar</option>
-    <option>Dirajti Jeddah</option>
-    <option>Dirajti Al-Sahafah</option>
-    <option>Dirajti Al-Sulaimaniyah</option>
-    <option>Dirajti Al-Masar Al-Riyadi</option>
-    <option>Hajeen Al-Malaz</option>
-    <option>Hajeen Al-Ruwabi</option>
-    <option>Hajeen Al-Madinah</option>
-    <option>Hajeen Hail</option>
-  </select>
-  <select id="toBranch">
-    <option value="" disabled selected>اختر الفرع (إلى)</option>
-    <option>Al-Ghanamiah Warehouse</option>
-    <option>Al-Kharj Warehouse</option>
-    <option>Dirajti Al-Narjis</option>
-    <option>Dirajti Al-Khobar</option>
-    <option>Dirajti Jeddah</option>
-    <option>Dirajti Al-Sahafah</option>
-    <option>Dirajti Al-Sulaimaniyah</option>
-    <option>Dirajti Al-Masar Al-Riyadi</option>
-    <option>Hajeen Al-Malaz</option>
-    <option>Hajeen Al-Ruwabi</option>
-    <option>Hajeen Al-Madinah</option>
-    <option>Hajeen Hail</option>
-  </select>
-</div>
+  <div>
+    <label>From Branch:</label>
+    <select id="fromBranch">
+      <option value="">Select branch</option>
+      <option value="Riyadh">Riyadh</option>
+      <option value="Jeddah">Jeddah</option>
+      <option value="Dammam">Dammam</option>
+      <option value="Mecca">Mecca</option>
+    </select>
 
-<div class="container">
-  <div class="box" id="productList">
-    <strong>المنتجات</strong>
+    <label>To Branch:</label>
+    <select id="toBranch">
+      <option value="">Select branch</option>
+      <option value="Riyadh">Riyadh</option>
+      <option value="Jeddah">Jeddah</option>
+      <option value="Dammam">Dammam</option>
+      <option value="Mecca">Mecca</option>
+    </select>
   </div>
-  <div class="box" id="cartList">
-    <strong>السلة</strong>
+
+  <div>
+    <input type="text" id="search" placeholder="Search by name or SKU">
   </div>
-</div>
 
-<div class="actions">
-  <button onclick="submitOrder()">إرسال إلى Zapier</button>
-</div>
+  <h3>Products</h3>
+  <div id="products"></div>
 
-<script>
-  const webhookURL = "https://hooks.zapier.com/hooks/catch/20490421/utyod6s/";
+  <h3>Cart</h3>
+  <div id="cart"></div>
 
-  const PRODUCTS = [
-    {sku:"'10572", name:"Electric Drift Scooter for Kids", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/s-l1200_b00e229d-a582-4808-b6a6-0ac455ede905.jpg?v=1744290455"},
-    {sku:"'11695", name:"Bicycle - AMELIA", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/amelia--1.webp?v=1744290452"},
-    {sku:"'10327", name:"Wall Scooter Holder", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/f7ad195dd8fe4a20e227e2ada8c4564b.png?v=1744290447"},
-    {sku:"'10001", name:"Mountain Bike - Falcon 29\"", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/mountain-bike.jpg?v=1744290401"},
-    {sku:"'10002", name:"City Bike - Urban Rider", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/city-bike.jpg?v=1744290402"},
-    {sku:"'10003", name:"Folding Bike - Compact X", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/folding-bike.jpg?v=1744290403"},
-    {sku:"'10004", name:"Helmet - Pro Safety", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/helmet.jpg?v=1744290404"},
-    {sku:"'10005", name:"Cycling Gloves", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/gloves.jpg?v=1744290405"},
-    {sku:"'10006", name:"Scooter Dido F70", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/dido-f70.jpg?v=1744290406"},
-    {sku:"'10007", name:"Kids Bicycle - Bella 16\"", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/kids-bike.jpg?v=1744290407"},
-    {sku:"'10008", name:"Electric Bike V8", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/ebike-v8.jpg?v=1744290408"},
-    {sku:"'10009", name:"BMX Bike - Stunt Pro", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/bmx.jpg?v=1744290409"},
-    {sku:"'10010", name:"Rear Light LED", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rear-light.jpg?v=1744290410"},
-    {sku:"'10011", name:"Front Light LED", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/front-light.jpg?v=1744290411"},
-    {sku:"'10012", name:"Air Pump - Portable", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/pump.jpg?v=1744290412"},
-    {sku:"'10013", name:"Lock - Anti Theft", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/lock.jpg?v=1744290413"},
-    {sku:"'10014", name:"Cycling Bottle", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/bottle.jpg?v=1744290414"},
-    {sku:"'10015", name:"Cycling Shoes", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/shoes.jpg?v=1744290415"},
-    {sku:"'10016", name:"E-Scooter Charger", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/charger.jpg?v=1744290416"},
-    {sku:"'10017", name:"Basket - Front", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/basket.jpg?v=1744290417"}
-  ];
+  <button onclick="submitOrder()">Submit Order</button>
 
-  const CART = {};
+  <script>
+    const PRODUCTS = [
+      { sku: "SKU001", name: "Bike 1", quantity: 10 },
+      { sku: "SKU002", name: "Bike 2", quantity: 15 },
+      { sku: "SKU003", name: "Scooter 1", quantity: 20 },
+      { sku: "SKU004", name: "Helmet", quantity: 25 },
+      { sku: "SKU005", name: "Lock", quantity: 30 },
+      { sku: "SKU006", name: "Light", quantity: 18 },
+      { sku: "SKU007", name: "Bell", quantity: 40 },
+      { sku: "SKU008", name: "Seat", quantity: 12 },
+      { sku: "SKU009", name: "Basket", quantity: 14 },
+      { sku: "SKU010", name: "Pump", quantity: 22 },
+      { sku: "SKU011", name: "Gloves", quantity: 16 },
+      { sku: "SKU012", name: "Mirror", quantity: 9 },
+      { sku: "SKU013", name: "Stand", quantity: 11 },
+      { sku: "SKU014", name: "Brake Pads", quantity: 20 },
+      { sku: "SKU015", name: "Chain", quantity: 8 },
+      { sku: "SKU016", name: "Pedals", quantity: 13 },
+      { sku: "SKU017", name: "Handlebar", quantity: 17 },
+      { sku: "SKU018", name: "Wheel", quantity: 19 },
+      { sku: "SKU019", name: "Bottle Holder", quantity: 7 },
+      { sku: "SKU020", name: "Charger", quantity: 5 }
+    ];
 
-  function renderProducts(){
-    const prodDiv = document.getElementById("productList");
-    prodDiv.innerHTML = "<strong>المنتجات</strong>";
-    PRODUCTS.forEach(p=>{
-      const div = document.createElement("div");
-      div.className = "product";
-      div.innerHTML = `
-        <div style="display:flex;align-items:center;">
-          <img src="${p.image}" alt="">
-          <div>
-            <div>${p.name}</div>
-            <small>${p.sku}</small>
-          </div>
-        </div>
-        <button onclick="addToCart('${p.sku}')">+</button>`;
-      prodDiv.appendChild(div);
-    });
-  }
+    let CART = {};
 
-  function renderCart(){
-    const cartDiv = document.getElementById("cartList");
-    cartDiv.innerHTML = "<strong>السلة</strong>";
-    Object.keys(CART).forEach(sku=>{
-      const item = PRODUCTS.find(p=>p.sku===sku);
-      const qty = CART[sku];
-      const div = document.createElement("div");
-      div.className = "product";
-      div.innerHTML = `
-        <div>${item.name} (${sku})</div>
-        <input class="qty" type="number" min="1" value="${qty}" onchange="updateQty('${sku}', this.value)">
-        <button onclick="removeFromCart('${sku}')">×</button>`;
-      cartDiv.appendChild(div);
-    });
-  }
+    function renderProducts() {
+      const search = document.getElementById("search").value.toLowerCase();
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+      PRODUCTS.filter(p => p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search))
+        .forEach(p => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `${p.sku} - ${p.name} 
+            <button onclick="addToCart('${p.sku}')">Add</button>`;
+          container.appendChild(div);
+        });
+    }
 
-  function addToCart(sku){
-    CART[sku] = (CART[sku]||0)+1;
-    renderCart();
-  }
+    function renderCart() {
+      const container = document.getElementById("cart");
+      container.innerHTML = "";
+      Object.values(CART).forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `${item.sku} - ${item.name} 
+          <input type="number" value="${item.quantity}" min="1" onchange="updateQty('${item.sku}', this.value)">
+          <button onclick="removeFromCart('${item.sku}')">Remove</button>`;
+        container.appendChild(div);
+      });
+    }
 
-  function updateQty(sku, val){
-    const q = parseInt(val);
-    if(q > 0) CART[sku] = q;
-    else delete CART[sku];
-    renderCart();
-  }
+    function addToCart(sku) {
+      const product = PRODUCTS.find(p => p.sku === sku);
+      if (!CART[sku]) {
+        CART[sku] = { ...product, quantity: 1 };
+      } else {
+        CART[sku].quantity++;
+      }
+      renderCart();
+    }
 
-  function removeFromCart(sku){
-    delete CART[sku];
-    renderCart();
-  }
+    function removeFromCart(sku) {
+      delete CART[sku];
+      renderCart();
+    }
 
-  function buildCSV(){
-    const rows = ["SKU,Quantity"];
-    Object.entries(CART).forEach(([sku, qty]) => rows.push(`${sku},${qty}`));
-    return rows.join("\n");
-  }
+    function updateQty(sku, qty) {
+      CART[sku].quantity = parseInt(qty);
+    }
 
-  function submitOrder(){
-    const from = document.getElementById("fromBranch").value;
-    const to = document.getElementById("toBranch").value;
-    if(!from || !to){ alert("يجب اختيار الفرعين (من/إلى)."); return; }
-    if(!Object.keys(CART).length){ alert("السلة فارغة."); return; }
-    const csv = buildCSV();
+    function buildCSV() {
+      let csv = "SKU,Quantity\n";
+      Object.values(CART).forEach(item => {
+        csv += `${item.sku},${item.quantity}\n`;
+      });
+      return csv;
+    }
 
-    fetch(webhookURL, {
-      method: "POST",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ fromBranch: from, toBranch: to, csv })
-    })
-    .then(res => res.text())
-    .then(_ => alert("تم إرسال الطلب إلى Zapier بنجاح."))
-    .catch(_ => alert("خطأ أثناء الإرسال إلى Zapier."));
-  }
+    async function submitOrder() {
+      const fromBranch = document.getElementById("fromBranch").value;
+      const toBranch = document.getElementById("toBranch").value;
 
-  renderProducts();
-</script>
+      if (!fromBranch || !toBranch) {
+        alert("Select both branches.");
+        return;
+      }
+      if (!Object.keys(CART).length) {
+        alert("Cart is empty.");
+        return;
+      }
+
+      const csv = buildCSV();
+      try {
+        const res = await fetch("https://api.zipper.com/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileName: `transfer_${Date.now()}.csv`,
+            content: csv
+          })
+        });
+        const data = await res.json();
+        console.log("Sent to Zipper:", data);
+        alert("Order submitted successfully!");
+      } catch (err) {
+        console.error("Error sending to Zipper:", err);
+        alert("Error submitting order.");
+      }
+    }
+
+    document.getElementById("search").addEventListener("input", renderProducts);
+    renderProducts();
+  </script>
+
 </body>
 </html>
