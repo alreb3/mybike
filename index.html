@@ -321,10 +321,8 @@
     }
 
  function fileName(){
-  const from = (fromEl.value||'').trim().replace(/\s+/g,'-');
-  const to   = (toEl.value||'').trim().replace(/\s+/g,'-');
   const date = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'); 
-  return `transfer_${from}_to_${to}_${date}.csv`;
+  return `transfer_${date}.csv`;   // اسم بسيط آمن
 }
 
 function buildCSV(){
@@ -341,38 +339,29 @@ function buildCSV(){
   ).join('\n');
 }
 
-  async function submitOrder(){
-  if(!fromEl.value || !toEl.value){ 
-    alert('يجب اختيار الفرعين (من/إلى).'); 
-    return; 
-  }
-  if(!Object.keys(CART).length){ 
-    alert('السلة فارغة.'); 
-    return; 
-  }
+    async function submitOrder(){
+      if(!fromEl.value || !toEl.value){ alert('يجب اختيار الفرعين (من/إلى).'); return; }
+      if(!Object.keys(CART).length){ alert('السلة فارغة.'); return; }
+      const csv = buildCSV();
+      const name = fileName();
 
-  const csv = buildCSV();        // يبني محتوى CSV
-  const name = fileName();       // يحدد اسم الملف
+      // تنزيل الملف
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 
-  // إرسال إلى Zipper
-  fetch("https://api.zipper.com/upload", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      fileName: name,   // اسم الملف
-      content: csv      // محتوى CSV
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log("تم الإرسال إلى Zipper:", data);
-  })
-  .catch(err => {
-    console.error("خطأ في الإرسال:", err);
+     // Send CSV directly to Zapier
+try {
+  const form = new FormData();
+  form.append('file', new Blob([csv], { type: 'text/csv' }), name);
+  form.append('file_name', name);
+  form.append('from_branch', fromEl.value);
+  form.append('to_branch', toEl.value);
+
+  await fetch("https://hooks.zapier.com/hooks/catch/20490421/utyod6s/", {
+    method: 'POST',
+    body: form
   });
-}
 
   alert('تم إرسال الطلب إلى Zapier + تم تنزيل CSV.');
 } catch(e) {
