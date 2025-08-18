@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=1280">
   <title>طلب تحويل بين الفروع</title>
   <style>
     :root{ --bg:#ffffff; --panel:#ffffff; --text:#0b0f14; --muted:#4b5563; --line:#e5e7eb; --btn:#111111; --btnText:#ffffff; }
@@ -18,7 +18,12 @@
     .search{grid-column: span 3}
     .hint{color:var(--muted);font-size:12px;margin-top:6px}
     main{display:grid;grid-template-columns:1fr 360px}
-    @media(max-width:1050px){main{grid-template-columns:1fr} aside{position:static;height:auto} .row{grid-template-columns:1fr} .search{grid-column:span 1} }
+    /* @media(max-width:1050px){
+  main{grid-template-columns:1fr}
+  aside{position:static;height:auto}
+  .row{grid-template-columns:1fr}
+  .search{grid-column:span 1}
+} */
     .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;padding:16px}
     .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:transform .08s}
     .card:hover{transform:translateY(-2px)}
