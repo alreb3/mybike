@@ -129,32 +129,33 @@
     let deleteMode = false;
 
     // منتجات عينة (تتبدل عند رفع CSV)
-    let PRODUCTS = [
-  {sku:"'10572", name:"سكوتر درفت كهربائي للاطفال", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/s-l1200_b00e229d-a582-4808-b6a6-0ac455ede905.jpg?v=1744290455"},
-  {sku:"'11695", name:"دراجة هوائية - AMELIA", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/amelia--1.webp?v=1744290452"},
-  {sku:"'12001", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/7.jpg?v=1744290454"},
-  {sku:"'10327", name:"حامل سكوتر جداري", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/f7ad195dd8fe4a20e227e2ada8c4564b.png?v=1744290447"},
-  {sku:"'11061", name:"رأس منفاخ الدراجة الهوائية", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/bbn-grid-2-floor-pump-gray-7122411-detail-1.jpg?v=1744290441"},
-  {sku:"'12709", name:"حزام قفل الخوذة", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/Kids-Child-Bicycle-Helmet-Multi-sport-Adjustable-Safety-Cute-Bike-Helmet-for-Children-Skateboard-Cycling-Skate.jpg?v=1744290436"},
-  {sku:"'12700", name:"قطعة غيار خوذة", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/dido.webp?v=1744290435"},
-  {sku:"'12288", name:"عمود مرتبة دراجة هوائية من كوزون", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/HTB16DesXdfvK1RjSspfq6zzXFXaF_jpg_640x640Q90_jpg.webp?v=1744290426"},
-  {sku:"'100174", name:"ستاند دراجة هوائية", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/60c11a6f-f8de-44a9-8470-e2cf1121d754_1.067c5fa393a86238e8d9aab87e7f0caa.webp?v=1744290421"},
-  {sku:"'103265", name:"خوذة دراجات الطريق CAIRBULL", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--1.jpg?v=1744290400"},
-  {sku:"'103268", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--2.jpg?v=1744290401"},
-  {sku:"'103271", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--3.jpg?v=1744290402"},
-  {sku:"'103272", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--4.jpg?v=1744290403"},
-  {sku:"'103267", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--5.jpg?v=1744290405"},
-  {sku:"'103274", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--6.jpg?v=1744290406"},
-  {sku:"'102384", name:"أكمام لحماية الذراع من أشعة الشمس", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/2c10b92d595f2d6a8886ec9c4a3f953c.jpg?v=1744290399"},
-  {sku:"'12192", name:"دراجة هوائية - RX400", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--1.webp?v=1744290363"},
-  {sku:"'12202", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--3.webp?v=1744290368"},
-  {sku:"'12207", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--4.webp?v=1744290368"},
-  {sku:"'12190", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--5.webp?v=1744290370"},
-  {sku:"'12200", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--7.webp?v=1744290372"},
-  {sku:"'12205", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--8.webp?v=1744290373"},
-  {sku:"'12191", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--9.webp?v=1744290374"},
-  {sku:"'12201", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--11.webp?v=1744290376"},
+let PRODUCTS = [
+  {sku:"10572", name:"سكوتر درفت كهربائي للاطفال", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/s-l1200_b00e229d-a582-4808-b6a6-0ac455ede905.jpg?v=1744290455"},
+  {sku:"11695", name:"دراجة هوائية - AMELIA", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/amelia--1.webp?v=1744290452"},
+  {sku:"12001", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/7.jpg?v=1744290454"},
+  {sku:"10327", name:"حامل سكوتر جداري", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/f7ad195dd8fe4a20e227e2ada8c4564b.png?v=1744290447"},
+  {sku:"11061", name:"رأس منفاخ الدراجة الهوائية", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/bbn-grid-2-floor-pump-gray-7122411-detail-1.jpg?v=1744290441"},
+  {sku:"12709", name:"حزام قفل الخوذة", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/Kids-Child-Bicycle-Helmet-Multi-sport-Adjustable-Safety-Cute-Bike-Helmet-for-Children-Skateboard-Cycling-Skate.jpg?v=1744290436"},
+  {sku:"12700", name:"قطعة غيار خوذة", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/dido.webp?v=1744290435"},
+  {sku:"12288", name:"عمود مرتبة دراجة هوائية من كوزون", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/HTB16DesXdfvK1RjSspfq6zzXFXaF_jpg_640x640Q90_jpg.webp?v=1744290426"},
+  {sku:"100174", name:"ستاند دراجة هوائية", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/60c11a6f-f8de-44a9-8470-e2cf1121d754_1.067c5fa393a86238e8d9aab87e7f0caa.webp?v=1744290421"},
+  {sku:"103265", name:"خوذة دراجات الطريق CAIRBULL", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--1.jpg?v=1744290400"},
+  {sku:"103268", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--2.jpg?v=1744290401"},
+  {sku:"103271", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--3.jpg?v=1744290402"},
+  {sku:"103272", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--4.jpg?v=1744290403"},
+  {sku:"103267", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--5.jpg?v=1744290405"},
+  {sku:"103274", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/cairbull--6.jpg?v=1744290406"},
+  {sku:"102384", name:"أكمام لحماية الذراع من أشعة الشمس", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/products/2c10b92d595f2d6a8886ec9c4a3f953c.jpg?v=1744290399"},
+  {sku:"12192", name:"دراجة هوائية - RX400", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--1.webp?v=1744290363"},
+  {sku:"12202", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--3.webp?v=1744290368"},
+  {sku:"12207", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--4.webp?v=1744290368"},
+  {sku:"12190", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--5.webp?v=1744290370"},
+  {sku:"12200", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--7.webp?v=1744290372"},
+  {sku:"12205", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--8.webp?v=1744290373"},
+  {sku:"12191", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--9.webp?v=1744290374"},
+  {sku:"12201", name:"nan", image:"https://cdn.shopify.com/s/files/1/0491/1258/0262/files/rx400--11.webp?v=1744290376"},
 ];
+
 
     let CART = {}; // sku -> {sku, name, image, qty}
 
