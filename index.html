@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Daily Sales Mobile App v1.6</title>
+  <title>Daily Sales Mobile App v1.7</title>
   <style>
     :root{ --bg:#ffffff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --btn:#111111; --btnText:#ffffff; --ok:#10b981; --warn:#ef4444; --card:#ffffff; --shadow:0 4px 14px rgba(0,0,0,.06);} 
     *{box-sizing:border-box}
@@ -26,7 +26,6 @@
     .toast.ok{background:var(--ok)}
     .toast.err{background:var(--warn)}
     .footer{margin:8px 0 40px;color:var(--muted);font-size:12px;text-align:center}
-    /* bottom full-width send bar */
     .sendbar{position:sticky;bottom:0;left:0;right:0;background:#fff;padding:6px 0;margin-top:6px}
     .sendbar .btn{width:100%;border-radius:12px;border:1px solid #111;background:#111;color:#fff;height:48px;font-size:16px}
   </style>
@@ -34,7 +33,7 @@
 <body>
   <div class="wrap">
     <header>
-      <h1> تطبيق الإقفالات اليومي </h1>
+      <h1>تطبيق الإقفالات اليومي</h1>
       <small class="muted">تطبيق داخلي خاص</small>
     </header>
 
@@ -134,9 +133,16 @@
           <textarea id="notes" rows="2" placeholder="Write any note..."></textarea>
         </div>
       </div>
+
+      <div class="row" style="margin-top:12px">
+        <div>
+          <label for="photo">Attach Photo (camera only)</label>
+          <input id="photo" type="file" accept="image/*" capture="environment" />
+        </div>
+      </div>
     </div>
 
-    <div class="footer">جميع الحقوق لشركة دراجتي  | تم تطويره داخليا </div>
+    <div class="footer">جميع الحقوق لشركة دراجتي | تم تطويره داخليا</div>
 
     <div class="sendbar">
       <div class="wrap" style="padding:0 14px;">
@@ -152,7 +158,7 @@
     const todayLocalISO = ()=>{ const d=new Date(); const tz=new Date(d.getTime()-d.getTimezoneOffset()*60000); return tz.toISOString().slice(0,10); }
     const parseNum = (v)=>{ const n=parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isNaN(n)?0:n; }
     const toMoney = (n)=> (Number(n)||0).toFixed(2);
-    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\r?\n/g,' '); return /[",\n]/.test(s)? '"'+s.replace(/"/g,'""')+'"' : s; }
+    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\r?\n/g,' '); return /[\",\n]/.test(s)? '"'+s.replace(/\"/g,'\"\"')+'"' : s; }
 
     const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Notes,Total';
 
@@ -201,26 +207,37 @@
       }
     }
 
-    async function sendToZapier(payload){
+    async function sendToZapier(payload, file){
       const url = getWH();
-      try{ const res = await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); if(res.ok) return true; }catch(_){ }
-      try{ await fetch(url,{ method:'POST', mode:'no-cors', body: JSON.stringify(payload) }); return true; }catch(_){ }
-      return false;
+      const formData = new FormData();
+      formData.append('payload_json', JSON.stringify(payload));
+      if(file){
+        formData.append('file', file, 'photo.jpg');
+      }
+      try{
+        await fetch(url,{ method:'POST', body: formData });
+        return true;
+      }catch(_){ return false; }
     }
 
     document.getElementById('btnSend').addEventListener('click', async ()=>{
       const data = getFormData();
       if(!data.Branch){ showToast('Select a branch', false); return; }
       if(!data.Employee){ showToast('Select an employee', false); return; }
-      if(parseNum(data.Total) <= 0){ showToast('Enter the Total amoif($('#total').value.trim() === ''){ showToast('Enter the Total amount (can be 0)', false); return; }
-unt', false); return; }
+      if($('#total').value.trim() === ''){ showToast('Enter the Total amount (can be 0)', false); return; }
+
+      const photoFile = $('#photo').files[0];
+      if(!photoFile){
+        showToast('Please take a photo with camera', false);
+        return;
+      }
 
       const csvRow = toCsvRow(data);
       const csvText = header + '\n' + csvRow + '\n';
       await copyToClipboard(csvText);
 
-      const payload = { type:'daily_sales_v1.6', header, row: csvRow, csv: csvText, json: data };
-      const ok = await sendToZapier(payload);
+      const payload = { type:'daily_sales_v1.7', header, row: csvRow, csv: csvText, json: data };
+      const ok = await sendToZapier(payload, photoFile);
 
       if(ok){ showToast('Sent successfully ✅'); }
       else { showToast('Failed to send — check Zapier', false); }
