@@ -220,7 +220,8 @@
       const data = getFormData();
       if(!data.Branch){ showToast('Select a branch', false); return; }
       if(!data.Employee){ showToast('Select an employee', false); return; }
-      if(parseNum(data.Total) <= 0){ showToast('Enter the Total amount', false); return; }
+      if(parseNum(data.Total) <= 0){ showToast('Enter the Total amoif($('#total').value.trim() === ''){ showToast('Enter the Total amount (can be 0)', false); return; }
+unt', false); return; }
 
       const csvRow = toCsvRow(data);
       const csvText = header + '\n' + csvRow + '\n';
