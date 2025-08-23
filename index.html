@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Sales Mobile App v1.6</title>
+  <style>
+    :root{ --bg:#ffffff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --btn:#111111; --btnText:#ffffff; --ok:#10b981; --warn:#ef4444; --card:#ffffff; --shadow:0 4px 14px rgba(0,0,0,.06);} 
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    .wrap{max-width:420px;margin:0 auto;padding:16px 14px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+    h1{font-size:18px;margin:0;font-weight:700}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 12px;box-shadow:var(--shadow)}
+    label{display:block;font-size:13px;color:#111;margin:8px 2px 6px}
+    input, select, textarea{width:100%;padding:12px 12px;border:1px solid var(--line);border-radius:12px;font-size:16px;background:#fff;outline:none;appearance:none;-webkit-appearance:none;-moz-appearance:none}
+    input:focus, select:focus, textarea:focus{border-color:#111}
+    input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
+    input[type=number]{ -moz-appearance:textfield }
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .row{display:grid;gap:10px;margin-top:10px}
+    .muted{color:var(--muted);font-size:12px}
+    .total-box{display:flex;align-items:center;justify-content:space-between;border:1px dashed var(--line);border-radius:14px;padding:12px 14px;background:#fafafa}
+    .actions{display:flex;gap:10px;margin-top:14px}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);padding:10px 14px;border-radius:12px;color:#fff;display:none;font-size:14px;box-shadow:var(--shadow);z-index:50}
+    .toast.ok{background:var(--ok)}
+    .toast.err{background:var(--warn)}
+    .footer{margin:8px 0 40px;color:var(--muted);font-size:12px;text-align:center}
+    /* bottom full-width send bar */
+    .sendbar{position:sticky;bottom:0;left:0;right:0;background:#fff;padding:6px 0;margin-top:6px}
+    .sendbar .btn{width:100%;border-radius:12px;border:1px solid #111;background:#111;color:#fff;height:48px;font-size:16px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Daily Sales – v1.6</h1>
+      <small class="muted">White background • Black buttons</small>
+    </header>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label for="date">Date</label>
+          <input id="date" type="date" />
+        </div>
+        <div>
+          <label for="branch">Branch</label>
+          <select id="branch">
+            <option value="" selected>— Select branch —</option>
+            <option>النرجس</option>
+            <option>السليمانية</option>
+            <option>الصحافة</option>
+            <option>الخبر</option>
+            <option>جدة</option>
+            <option>حطين</option>
+            <option>الملز</option>
+            <option>الروابي</option>
+            <option>المدينة</option>
+            <option>حائل</option>
+          </select>
+        </div>
+        <div>
+          <label for="employee">Employee</label>
+          <select id="employee">
+            <option value="" selected>— Select employee —</option>
+            <option>علاء صلاح</option>
+            <option>أحمد منير</option>
+            <option>عبدالرحمن على السيد</option>
+            <option>إللام ميي</option>
+            <option>مصطفى جمال</option>
+            <option>أحمد محمد عبدالحليم</option>
+            <option>جوزيفت موريكي</option>
+            <option>الامجير حسين أزاد</option>
+            <option>محمد سمير</option>
+            <option>ايوب غاشيو</option>
+            <option>مصطفى محمد كامل</option>
+            <option>شريف مصطفى محمد متولي</option>
+            <option>عبدالرحمن عيد أحمد السيد</option>
+            <option>محمود أحمد عبداللطيف زيدان</option>
+            <option>ابراهيم علي الزايد</option>
+            <option>عبدالعزيز الدويش</option>
+            <option>محمد عبدالله السويدي السبيعي</option>
+            <option>نوره الكثيري</option>
+            <option>عبدالرحمن مسير الشمري</option>
+            <option>نوره سلطان العصيمي</option>
+            <option>نوره عبدالله السهلي</option>
+            <option>محمد ابراهيم ابراهيم سليمان</option>
+            <option>قمراء فلاح ناجي المطيري</option>
+            <option>مصطفى حامد عبدالرحمن</option>
+            <option>عبدالله التاج عبدالله</option>
+            <option>غلام كيم ميراج</option>
+            <option>خورشيد علام ريفون</option>
+            <option>مد مهدي حسن</option>
+            <option>احمد رمضان</option>
+            <option>محمد علي محمد بدويه</option>
+            <option>أحمد عبده عثمان محمد</option>
+            <option>جيف مولديز استانيل</option>
+            <option>شيخ روكي</option>
+          </select>
+        </div>
+      </div>
+
+      <label style="margin-top:12px">Amounts (3 × 2)</label>
+      <div class="grid-3">
+        <div>
+          <label for="cash" class="muted">Cash</label>
+          <input id="cash" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+        <div>
+          <label for="mada" class="muted">Mada</label>
+          <input id="mada" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+        <div>
+          <label for="visa" class="muted">Visa/Master</label>
+          <input id="visa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+        <div>
+          <label for="tabby" class="muted">Tabby</label>
+          <input id="tabby" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+        <div>
+          <label for="tamara" class="muted">Tamara</label>
+          <input id="tamara" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+        <div>
+          <label for="rajhi" class="muted">Rajhi Transfer</label>
+          <input id="rajhi" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <div class="total-box">
+          <div class="muted">Total (entered by employee)</div>
+          <input id="total" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" dir="ltr" style="max-width:160px;text-align:right;border:1px solid var(--line);border-radius:10px;padding:8px 10px" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <div>
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" rows="2" placeholder="Write any note..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">@ Hulool Baskl — runs fully in the browser (no server)</div>
+
+    <div class="sendbar">
+      <div class="wrap" style="padding:0 14px;">
+        <button id="btnSend" class="btn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const $ = (sel)=>document.querySelector(sel);
+    const todayLocalISO = ()=>{ const d=new Date(); const tz=new Date(d.getTime()-d.getTimezoneOffset()*60000); return tz.toISOString().slice(0,10); }
+    const parseNum = (v)=>{ const n=parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isNaN(n)?0:n; }
+    const toMoney = (n)=> (Number(n)||0).toFixed(2);
+    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\r?\n/g,' '); return /[",\n]/.test(s)? '"'+s.replace(/"/g,'""')+'"' : s; }
+
+    const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Notes,Total';
+
+    const DEFAULT_WH = 'https://hooks.zapier.com/hooks/catch/20490421/utcwmig/';
+    const getWH = ()=> DEFAULT_WH;
+
+    const getFormData = ()=>{
+      return {
+        Date: $('#date').value || todayLocalISO(),
+        Branch: $('#branch').value,
+        Employee: $('#employee').value,
+        Cash: toMoney(parseNum($('#cash').value)),
+        Mada: toMoney(parseNum($('#mada').value)),
+        Visa_Master: toMoney(parseNum($('#visa').value)),
+        Tabby: toMoney(parseNum($('#tabby').value)),
+        Tamara: toMoney(parseNum($('#tamara').value)),
+        Rajhi_Transfer: toMoney(parseNum($('#rajhi').value)),
+        Notes: ($('#notes').value||'').trim(),
+        Total: toMoney(parseNum($('#total').value))
+      };
+    }
+
+    const toCsvRow = (obj)=>[
+      csvEscape(obj.Date),
+      csvEscape(obj.Branch),
+      csvEscape(obj.Employee),
+      csvEscape(obj.Cash),
+      csvEscape(obj.Mada),
+      csvEscape(obj.Visa_Master),
+      csvEscape(obj.Tabby),
+      csvEscape(obj.Tamara),
+      csvEscape(obj.Rajhi_Transfer),
+      csvEscape(obj.Notes),
+      csvEscape(obj.Total)
+    ].join(',');
+
+    const showToast = (msg, ok=true)=>{ const t=$('#toast'); t.className='toast '+(ok?'ok':'err'); t.textContent=msg; t.style.display='block'; setTimeout(()=>{ t.style.display='none'; }, 2200); }
+
+    window.addEventListener('DOMContentLoaded', ()=>{
+      $('#date').value = todayLocalISO();
+    });
+
+    async function copyToClipboard(text){
+      try{ await navigator.clipboard.writeText(text); return true; }catch(_){
+        try{ const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); return true; }catch(_){ return false; }
+      }
+    }
+
+    async function sendToZapier(payload){
+      const url = getWH();
+      try{ const res = await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); if(res.ok) return true; }catch(_){ }
+      try{ await fetch(url,{ method:'POST', mode:'no-cors', body: JSON.stringify(payload) }); return true; }catch(_){ }
+      return false;
+    }
+
+    document.getElementById('btnSend').addEventListener('click', async ()=>{
+      const data = getFormData();
+      if(!data.Branch){ showToast('Select a branch', false); return; }
+      if(!data.Employee){ showToast('Select an employee', false); return; }
+      if(parseNum(data.Total) <= 0){ showToast('Enter the Total amount', false); return; }
+
+      const csvRow = toCsvRow(data);
+      const csvText = header + '\n' + csvRow + '\n';
+      await copyToClipboard(csvText);
+
+      const payload = { type:'daily_sales_v1.6', header, row: csvRow, csv: csvText, json: data };
+      const ok = await sendToZapier(payload);
+
+      if(ok){ showToast('Sent successfully ✅'); }
+      else { showToast('Failed to send — check Zapier', false); }
+    });
+  </script>
+</body>
+</html>
