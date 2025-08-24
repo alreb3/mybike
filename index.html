@@ -120,14 +120,14 @@
           <label for="rajhi" class="muted">Rajhi Transfer</label>
           <input id="rajhi" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
         </div>
-        <!-- New fields under Tabby, Tamara, Rajhi -->
+        <!-- New fields -->
         <div>
-          <label for="tab" class="muted">Tab</label>
-          <input id="tab" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+          <label for="tap" class="muted">Tap</label>
+          <input id="tap" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
         </div>
         <div>
-          <label for="paid" class="muted">Paid</label>
-          <input id="paid" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+          <label for="madfu" class="muted">Madfu</label>
+          <input id="madfu" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
         </div>
         <div>
           <label for="inmaa" class="muted">Inmaa Transfer</label>
@@ -176,12 +176,12 @@
   <script>
     const $ = (sel)=>document.querySelector(sel);
     const todayLocalISO = ()=>{ const d=new Date(); const tz=new Date(d.getTime()-d.getTimezoneOffset()*60000); return tz.toISOString().slice(0,10); }
-    const parseNum = (v)=>{ const n=parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isNaN(n)?0:n; }
+    const parseNum = (v)=>{ const n=parseFloat(String(v).replace(/[^0-9.\\-]/g,'')); return isNaN(n)?0:n; }
     const toMoney = (n)=> (Number(n)||0).toFixed(2);
-    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\r?\n/g,' '); return /[\",\n]/.test(s)? '"'+s.replace(/\"/g,'\"\"')+'"' : s; }
+    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\\r?\\n/g,' '); return /[\\\",\\n]/.test(s)? '\"'+s.replace(/\\\"/g,'\\\"\\\"')+'\"' : s; }
 
-    // header includes the 3 new fields
-    const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Tab,Paid,Inmaa_Transfer,Notes,Total';
+    // header includes the new fields
+    const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Tap,Madfu,Inmaa_Transfer,Notes,Total';
 
     const DEFAULT_WH = 'https://hooks.zapier.com/hooks/catch/20490421/utcwmig/';
     const getWH = ()=> DEFAULT_WH;
@@ -197,8 +197,8 @@
         Tabby: toMoney(parseNum($('#tabby').value)),
         Tamara: toMoney(parseNum($('#tamara').value)),
         Rajhi_Transfer: toMoney(parseNum($('#rajhi').value)),
-        Tab: toMoney(parseNum($('#tab').value)),
-        Paid: toMoney(parseNum($('#paid').value)),
+        Tap: toMoney(parseNum($('#tap').value)),
+        Madfu: toMoney(parseNum($('#madfu').value)),
         Inmaa_Transfer: toMoney(parseNum($('#inmaa').value)),
         Notes: ($('#notes').value||'').trim(),
         Total: toMoney(parseNum($('#total').value))
@@ -215,8 +215,8 @@
       csvEscape(obj.Tabby),
       csvEscape(obj.Tamara),
       csvEscape(obj.Rajhi_Transfer),
-      csvEscape(obj.Tab),
-      csvEscape(obj.Paid),
+      csvEscape(obj.Tap),
+      csvEscape(obj.Madfu),
       csvEscape(obj.Inmaa_Transfer),
       csvEscape(obj.Notes),
       csvEscape(obj.Total)
@@ -263,7 +263,7 @@
       if(!photoFile){ showOverlay('Please take a photo with camera', false); setTimeout(hideOverlay, 1800); return; }
 
       const csvRow = toCsvRow(data);
-      const csvText = header + '\n' + csvRow + '\n';
+      const csvText = header + '\\n' + csvRow + '\\n';
       await copyToClipboard(csvText);
 
       // Loading UI centered
