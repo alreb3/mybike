@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Daily Sales Mobile App v1.7</title>
+  <title>Daily Sales Mobile App v1.8</title>
   <style>
     :root{ --bg:#ffffff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --btn:#111111; --btnText:#ffffff; --ok:#10b981; --warn:#ef4444; --card:#ffffff; --shadow:0 4px 14px rgba(0,0,0,.06);} 
     *{box-sizing:border-box}
@@ -21,7 +21,6 @@
     .row{display:grid;gap:10px;margin-top:10px}
     .muted{color:var(--muted);font-size:12px}
     .total-box{display:flex;align-items:center;justify-content:space-between;border:1px dashed var(--line);border-radius:14px;padding:12px 14px;background:#fafafa}
-    .actions{display:flex;gap:10px;margin-top:14px}
     .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);padding:10px 14px;border-radius:12px;color:#fff;display:none;font-size:14px;box-shadow:var(--shadow);z-index:50}
     .toast.ok{background:var(--ok)}
     .toast.err{background:var(--warn)}
@@ -118,6 +117,19 @@
           <label for="rajhi" class="muted">Rajhi Transfer</label>
           <input id="rajhi" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
         </div>
+        <!-- ✅ New fields under Tabby, Tamara, Rajhi -->
+        <div>
+          <label for="tab" class="muted">Tab</label>
+          <input id="tab" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+        <div>
+          <label for="paid" class="muted">Paid</label>
+          <input id="paid" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
+        <div>
+          <label for="inmaa" class="muted">Inmaa Transfer</label>
+          <input id="inmaa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+        </div>
       </div>
 
       <div class="row" style="margin-top:12px">
@@ -160,7 +172,8 @@
     const toMoney = (n)=> (Number(n)||0).toFixed(2);
     const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\r?\n/g,' '); return /[\",\n]/.test(s)? '"'+s.replace(/\"/g,'\"\"')+'"' : s; }
 
-    const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Notes,Total';
+    // ✅ updated header to include the 3 new fields
+    const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Tab,Paid,Inmaa_Transfer,Notes,Total';
 
     const DEFAULT_WH = 'https://hooks.zapier.com/hooks/catch/20490421/utcwmig/';
     const getWH = ()=> DEFAULT_WH;
@@ -176,6 +189,9 @@
         Tabby: toMoney(parseNum($('#tabby').value)),
         Tamara: toMoney(parseNum($('#tamara').value)),
         Rajhi_Transfer: toMoney(parseNum($('#rajhi').value)),
+        Tab: toMoney(parseNum($('#tab').value)),
+        Paid: toMoney(parseNum($('#paid').value)),
+        Inmaa_Transfer: toMoney(parseNum($('#inmaa').value)),
         Notes: ($('#notes').value||'').trim(),
         Total: toMoney(parseNum($('#total').value))
       };
@@ -191,6 +207,9 @@
       csvEscape(obj.Tabby),
       csvEscape(obj.Tamara),
       csvEscape(obj.Rajhi_Transfer),
+      csvEscape(obj.Tab),
+      csvEscape(obj.Paid),
+      csvEscape(obj.Inmaa_Transfer),
       csvEscape(obj.Notes),
       csvEscape(obj.Total)
     ].join(',');
@@ -236,7 +255,7 @@
       const csvText = header + '\n' + csvRow + '\n';
       await copyToClipboard(csvText);
 
-      const payload = { type:'daily_sales_v1.7', header, row: csvRow, csv: csvText, json: data };
+      const payload = { type:'daily_sales_v1.8', header, row: csvRow, csv: csvText, json: data };
       const ok = await sendToZapier(payload, photoFile);
 
       if(ok){ showToast('Sent successfully ✅'); }
