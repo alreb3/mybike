@@ -13,7 +13,7 @@
     h1{font-size:18px;margin:0;font-weight:700}
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 12px;box-shadow:var(--shadow)}
     label{display:block;font-size:13px;color:#111;margin:8px 2px 6px}
-    input, select, textarea{width:100%;padding:12px 12px;border:1px solid var(--line);border-radius:12px;font-size:16px;background:#fff;outline:none;appearance:none;-webkit-appearance:none;-moz-appearance:none}
+    input, select, textarea{width:100%;padding:12px 12px;border:1px solid var(--line);border-radius:12px;font-size:16px;background:#fff;outline:none;appearance:none;-webkit-appearance:none;-moz-appearance:none;text-align:center}
     input:focus, select:focus, textarea:focus{border-color:#111}
     input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
     input[type=number]{ -moz-appearance:textfield }
@@ -21,12 +21,15 @@
     .row{display:grid;gap:10px;margin-top:10px}
     .muted{color:var(--muted);font-size:12px}
     .total-box{display:flex;align-items:center;justify-content:space-between;border:1px dashed var(--line);border-radius:14px;padding:12px 14px;background:#fafafa}
-    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);padding:10px 14px;border-radius:12px;color:#fff;display:none;font-size:14px;box-shadow:var(--shadow);z-index:50}
-    .toast.ok{background:var(--ok)}
-    .toast.err{background:var(--warn)}
     .footer{margin:8px 0 40px;color:var(--muted);font-size:12px;text-align:center}
     .sendbar{position:sticky;bottom:0;left:0;right:0;background:#fff;padding:6px 0;margin-top:6px}
     .sendbar .btn{width:100%;border-radius:12px;border:1px solid #111;background:#111;color:#fff;height:48px;font-size:16px}
+
+    /* Center overlay for loading/success/error */
+    .overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:100}
+    .overlay .box{display:flex;flex-direction:column;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);min-width:240px}
+    .spinner{width:28px;height:28px;border:3px solid #ddd;border-top-color:#111;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
@@ -76,6 +79,7 @@
             <option>شريف مصطفى محمد متولي</option>
             <option>عبدالرحمن عيد أحمد السيد</option>
             <option>محمود أحمد عبداللطيف زيدان</option>
+            <option>نوره الكثيري</option>
             <option>عبدالرحمن مسير الشمري</option>
             <option>محمد ابراهيم ابراهيم سليمان</option>
             <option>قمراء فلاح ناجي المطيري</option>
@@ -116,14 +120,14 @@
           <label for="rajhi" class="muted">Rajhi Transfer</label>
           <input id="rajhi" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
         </div>
-        <!-- ✅ New fields under Tabby, Tamara, Rajhi -->
+        <!-- New fields under Tabby, Tamara, Rajhi -->
         <div>
           <label for="tab" class="muted">Tab</label>
           <input id="tab" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
         </div>
         <div>
-          <label for="madfue" class="muted">madfue</label>
-          <input id="madfue" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+          <label for="paid" class="muted">Paid</label>
+          <input id="paid" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
         </div>
         <div>
           <label for="inmaa" class="muted">Inmaa Transfer</label>
@@ -134,7 +138,7 @@
       <div class="row" style="margin-top:12px">
         <div class="total-box">
           <div class="muted">Total (يتم ادخالها من الموظف)</div>
-          <input id="total" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" dir="ltr" style="max-width:160px;text-align:right;border:1px solid var(--line);border-radius:10px;padding:8px 10px" />
+          <input id="total" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" dir="ltr" style="max-width:160px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px" />
         </div>
       </div>
 
@@ -162,7 +166,12 @@
     </div>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div id="overlay" class="overlay" role="alert" aria-live="assertive">
+    <div class="box">
+      <div class="spinner" id="ovSpin"></div>
+      <div id="ovText" class="muted" style="font-size:14px; text-align:center"></div>
+    </div>
+  </div>
 
   <script>
     const $ = (sel)=>document.querySelector(sel);
@@ -171,7 +180,7 @@
     const toMoney = (n)=> (Number(n)||0).toFixed(2);
     const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\r?\n/g,' '); return /[\",\n]/.test(s)? '"'+s.replace(/\"/g,'\"\"')+'"' : s; }
 
-    // ✅ updated header to include the 3 new fields
+    // header includes the 3 new fields
     const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Tab,Paid,Inmaa_Transfer,Notes,Total';
 
     const DEFAULT_WH = 'https://hooks.zapier.com/hooks/catch/20490421/utcwmig/';
@@ -213,11 +222,12 @@
       csvEscape(obj.Total)
     ].join(',');
 
-    const showToast = (msg, ok=true)=>{ const t=$('#toast'); t.className='toast '+(ok?'ok':'err'); t.textContent=msg; t.style.display='block'; setTimeout(()=>{ t.style.display='none'; }, 2200); }
-
-    window.addEventListener('DOMContentLoaded', ()=>{
-      $('#date').value = todayLocalISO();
-    });
+    function showOverlay(text, spinning=true){
+      $('#ovText').textContent = text || '';
+      $('#ovSpin').style.display = spinning ? 'block' : 'none';
+      $('#overlay').style.display = 'flex';
+    }
+    function hideOverlay(){ $('#overlay').style.display = 'none'; }
 
     async function copyToClipboard(text){
       try{ await navigator.clipboard.writeText(text); return true; }catch(_){
@@ -233,32 +243,45 @@
         formData.append('file', file, 'photo.jpg');
       }
       try{
-        await fetch(url,{ method:'POST', body: formData });
-        return true;
+        const res = await fetch(url,{ method:'POST', body: formData });
+        return res.ok;
       }catch(_){ return false; }
     }
 
+    window.addEventListener('DOMContentLoaded', ()=>{
+      $('#date').value = todayLocalISO();
+    });
+
     document.getElementById('btnSend').addEventListener('click', async ()=>{
+      const btn = $('#btnSend');
       const data = getFormData();
-      if(!data.Branch){ showToast('Select a branch', false); return; }
-      if(!data.Employee){ showToast('Select an employee', false); return; }
-      if($('#total').value.trim() === ''){ showToast('Enter the Total amount (can be 0)', false); return; }
+      if(!data.Branch){ showOverlay('Select a branch', false); setTimeout(hideOverlay, 1800); return; }
+      if(!data.Employee){ showOverlay('Select an employee', false); setTimeout(hideOverlay, 1800); return; }
+      if($('#total').value.trim() === ''){ showOverlay('Enter the Total amount (can be 0)', false); setTimeout(hideOverlay, 1800); return; }
 
       const photoFile = $('#photo').files[0];
-      if(!photoFile){
-        showToast('Please take a photo with camera', false);
-        return;
-      }
+      if(!photoFile){ showOverlay('Please take a photo with camera', false); setTimeout(hideOverlay, 1800); return; }
 
       const csvRow = toCsvRow(data);
       const csvText = header + '\n' + csvRow + '\n';
       await copyToClipboard(csvText);
 
+      // Loading UI centered
+      btn.disabled = true; btn.textContent = '... جاري الإرسال ...';
+      showOverlay('Uploading, please wait...', true);
+
       const payload = { type:'daily_sales_v1.8', header, row: csvRow, csv: csvText, json: data };
       const ok = await sendToZapier(payload, photoFile);
 
-      if(ok){ showToast('Sent successfully ✅'); }
-      else { showToast('Failed to send — check Zapier', false); }
+      if(ok){
+        showOverlay('تم إرسال التقفيلة بنجاح ✅', false);
+        setTimeout(()=>{ hideOverlay(); }, 1800);
+      } else {
+        showOverlay('فشل الإرسال — تحقّق من Zapier', false);
+        setTimeout(()=>{ hideOverlay(); }, 2600);
+      }
+
+      btn.disabled = false; btn.textContent = 'إرسال الإقفال اليومي';
     });
   </script>
 </body>
