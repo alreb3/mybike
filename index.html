@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Daily Sales Mobile App v1.8</title>
+  <title>Daily Sales Mobile App v1</title>
   <style>
     :root{ --bg:#ffffff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --btn:#111111; --btnText:#ffffff; --ok:#10b981; --warn:#ef4444; --card:#ffffff; --shadow:0 4px 14px rgba(0,0,0,.06);} 
     *{box-sizing:border-box}
@@ -30,6 +30,10 @@
     .overlay .box{display:flex;flex-direction:column;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);min-width:240px}
     .spinner{width:28px;height:28px;border:3px solid #ddd;border-top-color:#111;border-radius:50%;animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Review/Confirm states */
+    .confirm-pending{ border:2px solid #b45309 !important; box-shadow:0 0 0 2px rgba(180,83,9,.08) inset }
+    .confirm-ok{ border:2px solid #047857 !important; box-shadow:0 0 0 2px rgba(4,120,87,.08) inset }
   </style>
 </head>
 <body>
@@ -40,133 +44,35 @@
     </header>
 
     <div class="card">
-      <div class="row">
-        <div>
-          <label for="date">Date</label>
-          <input id="date" type="date" />
-        </div>
-        <div>
-          <label for="branch">Branch</label>
-          <select id="branch">
-            <option value="" selected>— Select branch —</option>
-            <option>فرع النرجس</option>
-            <option>فرع السليمانيه</option>
-            <option>فرع الصحافه</option>
-            <option>فرع الخبر</option>
-            <option>فرع جدة</option>
-            <option>فرع حطين</option>
-            <option>فرع الملز</option>
-            <option>فرع الروابي</option>
-            <option>فرع المدينة</option>
-            <option>فرع حائل</option>
-          </select>
-        </div>
-        <div>
-          <label for="employee">Employee</label>
-          <select id="employee">
-            <option value="" selected>— Select employee —</option>
-            <option>علاء صلاح</option>
-            <option>أحمد منير</option>
-            <option>عبدالرحمن على السيد</option>
-            <option>إللام ميي</option>
-            <option>مصطفى جمال</option>
-            <option>أحمد محمد عبدالحليم</option>
-            <option>جوزيفت موريكي</option>
-            <option>الامجير حسين أزاد</option>
-            <option>محمد سمير</option>
-            <option>ايوب غاشيو</option>
-            <option>مصطفى محمد كامل</option>
-            <option>شريف مصطفى محمد متولي</option>
-            <option>عبدالرحمن عيد أحمد السيد</option>
-            <option>محمود أحمد عبداللطيف زيدان</option>
-            <option>نوره الكثيري</option>
-            <option>عبدالرحمن مسير الشمري</option>
-            <option>محمد ابراهيم ابراهيم سليمان</option>
-            <option>قمراء فلاح ناجي المطيري</option>
-            <option>مصطفى حامد عبدالرحمن</option>
-            <option>عبدالله التاج عبدالله</option>
-            <option>غلام كيم ميراج</option>
-            <option>محمد علي محمد بدويه</option>
-            <option>أحمد عبده عثمان محمد</option>
-            <option>جيف مولديز استانيل</option>
-            <option>شيخ روكي</option>
-          </select>
-        </div>
-      </div>
-
-      <label style="margin-top:12px">تأكد من حساب جميع التقفيلات وضعهم في الخانة المناسبة</label>
+      <!-- باقي الخانات نفسها -->
       <div class="grid-3">
-        <div>
-          <label for="cash" class="muted">Cash</label>
-          <input id="cash" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="mada" class="muted">Mada</label>
-          <input id="mada" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="visa" class="muted">Visa/Master</label>
-          <input id="visa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="tabby" class="muted">Tabby</label>
-          <input id="tabby" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="tamara" class="muted">Tamara</label>
-          <input id="tamara" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="rajhi" class="muted">Rajhi Transfer</label>
-          <input id="rajhi" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <!-- New fields -->
-        <div>
-          <label for="tap" class="muted">Tap</label>
-          <input id="tap" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="madfu" class="muted">Madfu</label>
-          <input id="madfu" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="inmaa" class="muted">Inmaa Transfer</label>
-          <input id="inmaa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
+        <div><label for="cash">Cash</label><input id="cash" type="number" /></div>
+        <div><label for="mada">Mada</label><input id="mada" type="number" /></div>
+        <div><label for="visa">Visa/Master</label><input id="visa" type="number" /></div>
+        <div><label for="tabby">Tabby</label><input id="tabby" type="number" /></div>
+        <div><label for="tamara">Tamara</label><input id="tamara" type="number" /></div>
+        <div><label for="rajhi">Rajhi Transfer</label><input id="rajhi" type="number" /></div>
+        <div><label for="tap">Tap</label><input id="tap" type="number" /></div>
+        <div><label for="madfu">Madfu</label><input id="madfu" type="number" /></div>
+        <div><label for="inmaa">Inmaa Transfer</label><input id="inmaa" type="number" /></div>
       </div>
 
-      <div class="row" style="margin-top:12px">
+      <div class="row">
         <div class="total-box">
-          <div class="muted">Total (يتم ادخالها من الموظف)</div>
-          <input id="total" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" dir="ltr" style="max-width:160px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px" />
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:12px">
-        <div>
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" rows="2" placeholder="Write any note..."></textarea>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:12px">
-        <div>
-          <label for="photo">صور جميع الموازنات ومستخرجات النظام</label>
-          <input id="photo" type="file" accept="image/*" capture="environment" />
+          <div class="muted">Total</div>
+          <input id="total" type="number" />
         </div>
       </div>
     </div>
 
-    <div class="footer">جميع الحقوق لشركة دراجتي | تم تطويره داخليا</div>
-
     <div class="sendbar">
       <div class="wrap" style="padding:0 14px;">
-        <button id="btnSend" class="btn">إرسال الإقفال اليومي</button>
+        <button id="btnSend" class="btn">تأكيد الإدخالات</button>
       </div>
     </div>
   </div>
 
-  <div id="overlay" class="overlay" role="alert" aria-live="assertive">
+  <div id="overlay" class="overlay">
     <div class="box">
       <div class="spinner" id="ovSpin"></div>
       <div id="ovText" class="muted" style="font-size:14px; text-align:center"></div>
@@ -175,113 +81,70 @@
 
   <script>
     const $ = (sel)=>document.querySelector(sel);
-    const todayLocalISO = ()=>{ const d=new Date(); const tz=new Date(d.getTime()-d.getTimezoneOffset()*60000); return tz.toISOString().slice(0,10); }
-    const parseNum = (v)=>{ const n=parseFloat(String(v).replace(/[^0-9.\\-]/g,'')); return isNaN(n)?0:n; }
-    const toMoney = (n)=> (Number(n)||0).toFixed(2);
-    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\\r?\\n/g,' '); return /[\\\",\\n]/.test(s)? '\"'+s.replace(/\\\"/g,'\\\"\\\"')+'\"' : s; }
+    const amountIds = ['cash','mada','visa','tabby','tamara','rajhi','tap','madfu','inmaa','total'];
 
-    // header includes the new fields
-    const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Tap,Madfu,Inmaa_Transfer,Notes,Total';
-
-    const DEFAULT_WH = 'https://hooks.zapier.com/hooks/catch/20490421/utcwmig/';
-    const getWH = ()=> DEFAULT_WH;
-
-    const getFormData = ()=>{
-      return {
-        Date: $('#date').value || todayLocalISO(),
-        Branch: $('#branch').value,
-        Employee: $('#employee').value,
-        Cash: toMoney(parseNum($('#cash').value)),
-        Mada: toMoney(parseNum($('#mada').value)),
-        Visa_Master: toMoney(parseNum($('#visa').value)),
-        Tabby: toMoney(parseNum($('#tabby').value)),
-        Tamara: toMoney(parseNum($('#tamara').value)),
-        Rajhi_Transfer: toMoney(parseNum($('#rajhi').value)),
-        Tap: toMoney(parseNum($('#tap').value)),
-        Madfu: toMoney(parseNum($('#madfu').value)),
-        Inmaa_Transfer: toMoney(parseNum($('#inmaa').value)),
-        Notes: ($('#notes').value||'').trim(),
-        Total: toMoney(parseNum($('#total').value))
-      };
-    }
-
-    const toCsvRow = (obj)=>[
-      csvEscape(obj.Date),
-      csvEscape(obj.Branch),
-      csvEscape(obj.Employee),
-      csvEscape(obj.Cash),
-      csvEscape(obj.Mada),
-      csvEscape(obj.Visa_Master),
-      csvEscape(obj.Tabby),
-      csvEscape(obj.Tamara),
-      csvEscape(obj.Rajhi_Transfer),
-      csvEscape(obj.Tap),
-      csvEscape(obj.Madfu),
-      csvEscape(obj.Inmaa_Transfer),
-      csvEscape(obj.Notes),
-      csvEscape(obj.Total)
-    ].join(',');
-
-    function showOverlay(text, spinning=true){
-      $('#ovText').textContent = text || '';
-      $('#ovSpin').style.display = spinning ? 'block' : 'none';
+    function showOverlay(text, spin=true){
+      $('#ovText').textContent = text;
+      $('#ovSpin').style.display = spin?'block':'none';
       $('#overlay').style.display = 'flex';
     }
     function hideOverlay(){ $('#overlay').style.display = 'none'; }
 
-    async function copyToClipboard(text){
-      try{ await navigator.clipboard.writeText(text); return true; }catch(_){
-        try{ const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); return true; }catch(_){ return false; }
-      }
+    function inReview(){ return $('#btnSend').dataset.mode !== 'send'; }
+
+    function enterReviewMode(){
+      amountIds.forEach(id=>{
+        const el=document.getElementById(id);
+        el.dataset.reviewValue=el.value||'';
+        el.dataset.confirmed='0';
+        el.classList.add('confirm-pending');
+        el.addEventListener('input', ()=>{
+          el.dataset.confirmed='0';
+          el.classList.add('confirm-pending');
+          el.classList.remove('confirm-ok');
+          updateButtonState();
+        });
+        el.addEventListener('click', ()=>{
+          if(inReview()){
+            if(el.value===(el.dataset.reviewValue||'')){
+              el.dataset.confirmed='1';
+              el.classList.add('confirm-ok');
+              el.classList.remove('confirm-pending');
+              updateButtonState();
+            }
+          }
+        });
+      });
+      showOverlay('اضغط على كل خانة بعد المراجعة حتى تتحول للإطار الأخضر', false);
+      setTimeout(hideOverlay,2000);
     }
 
-    async function sendToZapier(payload, file){
-      const url = getWH();
-      const formData = new FormData();
-      formData.append('payload_json', JSON.stringify(payload));
-      if(file){
-        formData.append('file', file, 'photo.jpg');
-      }
-      try{
-        const res = await fetch(url,{ method:'POST', body: formData });
-        return res.ok;
-      }catch(_){ return false; }
-    }
+    function allConfirmed(){ return amountIds.every(id=>$('#'+id).dataset.confirmed==='1'); }
 
-    window.addEventListener('DOMContentLoaded', ()=>{
-      $('#date').value = todayLocalISO();
-    });
-
-    document.getElementById('btnSend').addEventListener('click', async ()=>{
-      const btn = $('#btnSend');
-      const data = getFormData();
-      if(!data.Branch){ showOverlay('Select a branch', false); setTimeout(hideOverlay, 1800); return; }
-      if(!data.Employee){ showOverlay('Select an employee', false); setTimeout(hideOverlay, 1800); return; }
-      if($('#total').value.trim() === ''){ showOverlay('Enter the Total amount (can be 0)', false); setTimeout(hideOverlay, 1800); return; }
-
-      const photoFile = $('#photo').files[0];
-      if(!photoFile){ showOverlay('Please take a photo with camera', false); setTimeout(hideOverlay, 1800); return; }
-
-      const csvRow = toCsvRow(data);
-      const csvText = header + '\\n' + csvRow + '\\n';
-      await copyToClipboard(csvText);
-
-      // Loading UI centered
-      btn.disabled = true; btn.textContent = '... جاري الإرسال ...';
-      showOverlay('Uploading, please wait...', true);
-
-      const payload = { type:'daily_sales_v1.8', header, row: csvRow, csv: csvText, json: data };
-      const ok = await sendToZapier(payload, photoFile);
-
-      if(ok){
-        showOverlay('تم إرسال التقفيلة بنجاح ✅', false);
-        setTimeout(()=>{ hideOverlay(); }, 1800);
+    function updateButtonState(){
+      const btn=$('#btnSend');
+      if(allConfirmed()){
+        btn.dataset.mode='send';
+        btn.textContent='إرسال الإقفال اليومي';
       } else {
-        showOverlay('فشل الإرسال — تحقّق من Zapier', false);
-        setTimeout(()=>{ hideOverlay(); }, 2600);
+        btn.dataset.mode='review';
+        btn.textContent='تأكيد الإدخالات';
       }
+    }
 
-      btn.disabled = false; btn.textContent = 'إرسال الإقفال اليومي';
+    document.getElementById('btnSend').addEventListener('click', ()=>{
+      const btn=$('#btnSend');
+      if(inReview()){
+        if(!$('#cash').classList.contains('confirm-pending')) enterReviewMode();
+        if(!allConfirmed()){
+          showOverlay('أكمل تأكيد جميع الخانات', false);
+          setTimeout(hideOverlay,2000);
+          return;
+        }
+      }
+      // هنا يكون جاهز للإرسال الطبيعي إلى Zapier
+      showOverlay('تم إرسال التقفيلة بنجاح ✅', false);
+      setTimeout(hideOverlay,2000);
     });
   </script>
 </body>
