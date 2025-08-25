@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,7 +25,7 @@
     .sendbar{position:sticky;bottom:0;left:0;right:0;background:#fff;padding:6px 0;margin-top:6px}
     .sendbar .btn{width:100%;border-radius:12px;border:1px solid #111;background:#111;color:#fff;height:48px;font-size:16px}
 
-    /* Center overlay for loading/success/error */
+    /* Overlay (loading/success/error center) */
     .overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:100}
     .overlay .box{display:flex;flex-direction:column;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);min-width:240px}
     .spinner{width:28px;height:28px;border:3px solid #ddd;border-top-color:#111;border-radius:50%;animation:spin 1s linear infinite}
@@ -34,145 +34,161 @@
     /* Review/Confirm states */
     .confirm-pending{ border:2px solid #b45309 !important; box-shadow:0 0 0 2px rgba(180,83,9,.08) inset }
     .confirm-ok{ border:2px solid #047857 !important; box-shadow:0 0 0 2px rgba(4,120,87,.08) inset }
+
+    /* Lang switcher (UI only) */
+    .lang{display:flex;align-items:center;gap:6px;position:relative}
+    .lang-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:4px 6px;font-size:12px;cursor:pointer}
+    .lang-menu{position:absolute;right:0;top:36px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);display:none;overflow:hidden;min-width:120px;z-index:10}
+    .lang-menu button{display:block;width:100%;padding:6px 10px;border:0;background:#fff;font-size:13px;text-align:left;cursor:pointer}
+    .lang-menu button:hover{background:#f3f4f6}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>تطبيق الإقفالات اليومي</h1>
-      <small class="muted">تطبيق داخلي خاص</small>
+      <h1 id="title">تطبيق الإقفالات اليومي</h1>
+      <div class="lang">
+        <button id="langBtn" class="lang-btn" aria-label="Change language">🌐</button>
+        <div id="langMenu" class="lang-menu" role="menu">
+          <button data-lang="ar" role="menuitem">العربية</button>
+          <button data-lang="en" role="menuitem">English</button>
+          <button data-lang="bn" role="menuitem">বাংলা</button>
+        </div>
+      </div>
     </header>
 
+    <!-- أول ثلاث خانات على سطر واحد -->
     <div class="grid-3">
-  <div>
-    <label for="date">Date</label>
-    <input id="date" type="date" style="font-size:13px; padding:10px" />
-  </div>
-  <div>
-    <label for="branch">Branch</label>
-    <select id="branch" style="font-size:13px; padding:10px">
-      <option value="" selected>Select branch</option>
-      <option>فرع النرجس</option>
-      <option>فرع السليمانيه</option>
-      <option>فرع الصحافه</option>
-      <option>فرع الخبر</option>
-      <option>فرع جدة</option>
-      <option>فرع حطين</option>
-      <option>فرع الملز</option>
-      <option>فرع الروابي</option>
-      <option>فرع المدينة</option>
-      <option>فرع حائل</option>
-    </select>
-  </div>
-  <div>
-    <label for="employee">Employee</label>
-    <select id="employee" style="font-size:12px; padding:10px">
-      <option value="" selected>Select employee</option>
-      <option>علاء صلاح</option>
-      <option>أحمد منير</option>
-      <option>عبدالرحمن على السيد</option>
-      <option>إللام ميي</option>
-      <option>مصطفى جمال</option>
-      <option>أحمد محمد عبدالحليم</option>
-      <option>جوزيفت موريكي</option>
-      <option>الامجير حسين أزاد</option>
-      <option>محمد سمير</option>
-      <option>ايوب غاشيو</option>
-      <option>مصطفى محمد كامل</option>
-      <option>شريف مصطفى محمد متولي</option>
-      <option>عبدالرحمن عيد أحمد السيد</option>
-      <option>محمود أحمد عبداللطيف زيدان</option>
-      <option>ابراهيم علي الزايد</option>
-      <option>عبدالعزيز الدويش</option>
-      <option>محمد عبدالله السويدي السبيعي</option>
-      <option>نوره الكثيري</option>
-      <option>عبدالرحمن مسير الشمري</option>
-      <option>نوره سلطان العصيمي</option>
-      <option>نوره عبدالله السهلي</option>
-      <option>محمد ابراهيم ابراهيم سليمان</option>
-      <option>قمراء فلاح ناجي المطيري</option>
-      <option>مصطفى حامد عبدالرحمن</option>
-      <option>عبدالله التاج عبدالله</option>
-      <option>غلام كيم ميراج</option>
-      <option>خورشيد علام ريفون</option>
-      <option>مد مهدي حسن</option>
-      <option>احمد رمضان</option>
-      <option>محمد علي محمد بدويه</option>
-      <option>أحمد عبده عثمان محمد</option>
-      <option>جيف مولديز استانيل</option>
-      <option>شيخ روكي</option>
-    </select>
-  </div>
-</div>
-
-
-      <label style="margin-top:12px">تأكد من حساب جميع التقفيلات وضعهم في الخانة المناسبة</label>
-      <div class="grid-3">
-        <div>
-          <label for="cash" class="muted">Cash</label>
-          <input id="cash" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="mada" class="muted">Mada</label>
-          <input id="mada" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="visa" class="muted">Visa/Master</label>
-          <input id="visa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="tabby" class="muted">Tabby</label>
-          <input id="tabby" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="tamara" class="muted">Tamara</label>
-          <input id="tamara" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="rajhi" class="muted">Rajhi Transfer</label>
-          <input id="rajhi" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="tap" class="muted">Tap</label>
-          <input id="tap" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="madfu" class="muted">Madfu</label>
-          <input id="madfu" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
-        <div>
-          <label for="inmaa" class="muted">Inmaa Transfer</label>
-          <input id="inmaa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
-        </div>
+      <div>
+        <label id="lblDate" for="date">Date</label>
+        <input id="date" type="date" style="font-size:13px; padding:10px" />
       </div>
-
-      <div class="row" style="margin-top:12px">
-        <div class="total-box">
-          <div class="muted">Total (يتم ادخالها من الموظف)</div>
-          <input id="total" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" dir="ltr" style="max-width:160px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px" />
-        </div>
+      <div>
+        <label id="lblBranch" for="branch">Branch</label>
+        <select id="branch" style="font-size:13px; padding:10px">
+          <option value="" selected>Select branch</option>
+          <option>فرع النرجس</option>
+          <option>فرع السليمانيه</option>
+          <option>فرع الصحافه</option>
+          <option>فرع الخبر</option>
+          <option>فرع جدة</option>
+          <option>فرع حطين</option>
+          <option>فرع الملز</option>
+          <option>فرع الروابي</option>
+          <option>فرع المدينة</option>
+          <option>فرع حائل</option>
+        </select>
       </div>
-
-      <div class="row" style="margin-top:12px">
-        <div>
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" rows="2" placeholder="Write any note..."></textarea>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:12px">
-        <div>
-          <label for="photo">صور جميع الموازنات ومستخرجات النظام</label>
-          <input id="photo" type="file" accept="image/*" capture="environment" />
-        </div>
+      <div>
+        <label id="lblEmployee" for="employee">Employee</label>
+        <select id="employee" style="font-size:12px; padding:10px">
+          <option value="" selected>Select employee</option>
+          <option>علاء صلاح</option>
+          <option>أحمد منير</option>
+          <option>عبدالرحمن على السيد</option>
+          <option>إللام ميي</option>
+          <option>مصطفى جمال</option>
+          <option>أحمد محمد عبدالحليم</option>
+          <option>جوزيفت موريكي</option>
+          <option>الامجير حسين أزاد</option>
+          <option>محمد سمير</option>
+          <option>ايوب غاشيو</option>
+          <option>مصطفى محمد كامل</option>
+          <option>شريف مصطفى محمد متولي</option>
+          <option>عبدالرحمن عيد أحمد السيد</option>
+          <option>محمود أحمد عبداللطيف زيدان</option>
+          <option>ابراهيم علي الزايد</option>
+          <option>عبدالعزيز الدويش</option>
+          <option>محمد عبدالله السويدي السبيعي</option>
+          <option>نوره الكثيري</option>
+          <option>عبدالرحمن مسير الشمري</option>
+          <option>نوره سلطان العصيمي</option>
+          <option>نوره عبدالله السهلي</option>
+          <option>محمد ابراهيم ابراهيم سليمان</option>
+          <option>قمراء فلاح ناجي المطيري</option>
+          <option>مصطفى حامد عبدالرحمن</option>
+          <option>عبدالله التاج عبدالله</option>
+          <option>غلام كيم ميرাজ</option>
+          <option>خورশিদ আলম রিফান</option>
+          <option>مد مهدي حسن</option>
+          <option>احمد رمضان</option>
+          <option>محمد علي محمد بدويه</option>
+          <option>أحمد عبده عثمان محمد</option>
+          <option>جيف مولديز استانيل</option>
+          <option>شيخ روكي</option>
+        </select>
       </div>
     </div>
 
-    <div class="footer">جميع الحقوق لشركة دراجتي | تم تطويره داخليا</div>
+    <label id="i18n-hint" style="margin-top:12px">تأكد من حساب جميع التقفيلات وضعهم في الخانة المناسبة</label>
+
+    <!-- خانات المبالغ 3×3 -->
+    <div class="grid-3">
+      <div>
+        <label id="lblCash" for="cash" class="muted">Cash</label>
+        <input id="cash" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblMada" for="mada" class="muted">Mada</label>
+        <input id="mada" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblVisa" for="visa" class="muted">Visa/Master</label>
+        <input id="visa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblTabby" for="tabby" class="muted">Tabby</label>
+        <input id="tabby" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblTamara" for="tamara" class="muted">Tamara</label>
+        <input id="tamara" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblRajhi" for="rajhi" class="muted">Rajhi Transfer</label>
+        <input id="rajhi" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblTap" for="tap" class="muted">Tap</label>
+        <input id="tap" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblMadfu" for="madfu" class="muted">Madfu</label>
+        <input id="madfu" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+      <div>
+        <label id="lblInmaa" for="inmaa" class="muted">Inmaa Transfer</label>
+        <input id="inmaa" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0" dir="ltr" />
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div class="total-box">
+        <div class="muted" id="i18n-total">Total (يتم ادخالها من الموظف)</div>
+        <input id="total" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" dir="ltr" style="max-width:160px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px" />
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label id="i18n-notes" for="notes">Notes (optional)</label>
+        <textarea id="notes" rows="2" placeholder="Write any note..."></textarea>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label id="i18n-photo" for="photo">صور جميع الموازنات ومستخرجات النظام</label>
+        <input id="photo" type="file" accept="image/*" capture="environment" />
+      </div>
+    </div>
+    </div>
+
+    <div class="footer" id="i18n-footer">جميع الحقوق لشركة دراجتي | تم تطويره داخليا</div>
 
     <div class="sendbar">
       <div class="wrap" style="padding:0 14px;">
-        <button id="btnSend" class="btn">تأكيد الإدخالات</button>
+        <button id="btnSend" class="btn" data-mode="review">تأكيد الإدخالات</button>
       </div>
     </div>
   </div>
@@ -187,35 +203,205 @@
   <script>
     const $ = (sel)=>document.querySelector(sel);
     const todayLocalISO = ()=>{ const d=new Date(); const tz=new Date(d.getTime()-d.getTimezoneOffset()*60000); return tz.toISOString().slice(0,10); }
-    const parseNum = (v)=>{ const n=parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isNaN(n)?0:n; }
+    const parseNum = (v)=>{ const n=parseFloat(String(v).replace(/[^0-9.\\-]/g,'')); return isNaN(n)?0:n; }
     const toMoney = (n)=> (Number(n)||0).toFixed(2);
-    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\r?\n/g,' '); return /[\",\n]/.test(s)? '"'+s.replace(/\"/g,'\"\"')+'"' : s; }
+    const csvEscape = (val)=>{ if(val==null) return ''; const s=String(val).replace(/\\r?\\n/g,' '); return /[\",\\n]/.test(s)? '\"'+s.replace(/\"/g,'\"\"')+'\"' : s; }
 
-    // CSV header (يشمل الحقول الإضافية Tap, Madfu, Inmaa_Transfer)
+    // CSV header (يشمل Tap, Madfu, Inmaa_Transfer)
     const header = 'Date,Branch,Employee,Cash,Mada,Visa_Master,Tabby,Tamara,Rajhi_Transfer,Tap,Madfu,Inmaa_Transfer,Notes,Total';
 
-    // Webhook ثابت (مخفي عن الواجهة)
+    // Webhook ثابت
     const DEFAULT_WH = 'https://hooks.zapier.com/hooks/catch/20490421/utcwmig/';
     const getWH = ()=> DEFAULT_WH;
 
+    // ========= ترجمات كاملة للواجهة + رسائل النظام =========
+    const i18n = {
+      ar: {
+        title: 'تطبيق الإقفالات اليومي',
+        date: 'التاريخ',
+        branch: 'الفرع',
+        employee: 'الموظف',
+        selectBranch: 'اختر الفرع',
+        selectEmp: 'اختر الموظف',
+
+        cash: 'كاش',
+        mada: 'مدى',
+        visa: 'فيزا/ماستر',
+        tabby: 'تابي',
+        tamara: 'تمارا',
+        rajhi: 'تحويل الراجحي',
+        tap: 'Tap',
+        madfu: 'Madfu',
+        inmaa: 'تحويل إنماء',
+
+        hint: 'تأكد من حساب جميع التقفيلات وضعهم في الخانة المناسبة',
+        totalLabel: 'الإجمالي (يتم إدخاله من الموظف)',
+        notes: 'ملاحظات (اختياري)',
+        notesPH: 'اكتب ملاحظة ...',
+        photo: 'صور جميع الموازنات ومستخرجات النظام',
+        footer: 'جميع الحقوق لشركة دراجتي | تم تطويره داخليًا',
+
+        btnReview: 'تأكيد الإدخالات',
+        btnSend: 'إرسال الإقفال اليومي',
+
+        msgSelectBranch: 'اختر الفرع',
+        msgSelectEmp: 'اختر الموظف',
+        msgEnterTotal: 'أدخل مبلغ الإجمالي (يمكن أن يكون 0)',
+        msgNeedPhoto: 'الرجاء التقاط صورة بالكاميرا',
+        msgReviewTip: 'اضغط على كل خانة بعد المراجعة حتى تتحول للإطار الأخضر',
+        msgConfirmAll: 'أكمل تأكيد جميع الخانات (إطار أخضر) للمتابعة',
+        msgUploading: 'جاري الرفع، يرجى الانتظار...',
+        msgSentOk: 'تم إرسال التقفيلة بنجاح ✅',
+        msgSendFail: 'فشل الإرسال — تحقّق من Zapier'
+      },
+      en: {
+        title: 'Daily Sales Mobile App',
+        date: 'Date',
+        branch: 'Branch',
+        employee: 'Employee',
+        selectBranch: 'Select branch',
+        selectEmp: 'Select employee',
+
+        cash: 'Cash',
+        mada: 'Mada',
+        visa: 'Visa/Master',
+        tabby: 'Tabby',
+        tamara: 'Tamara',
+        rajhi: 'Rajhi Transfer',
+        tap: 'Tap',
+        madfu: 'Madfu',
+        inmaa: 'Inmaa Transfer',
+
+        hint: 'Make sure to enter all amounts in the correct fields',
+        totalLabel: 'Total (entered by employee)',
+        notes: 'Notes (optional)',
+        notesPH: 'Write any note...',
+        photo: 'Upload all reconciliations & system extracts',
+        footer: 'All rights reserved to Darajati | Built in-house',
+
+        btnReview: 'Review Entries',
+        btnSend: 'Send Daily Closing',
+
+        msgSelectBranch: 'Select a branch',
+        msgSelectEmp: 'Select an employee',
+        msgEnterTotal: 'Enter the Total amount (can be 0)',
+        msgNeedPhoto: 'Please take a photo with camera',
+        msgReviewTip: 'Tap each field after reviewing until it turns green',
+        msgConfirmAll: 'Complete confirming all fields (green) to continue',
+        msgUploading: 'Uploading, please wait...',
+        msgSentOk: 'Closing sent successfully ✅',
+        msgSendFail: 'Failed to send — check Zapier'
+      },
+      bn: {
+        title: 'দৈনিক বিক্রয় অ্যাপ',
+        date: 'তারিখ',
+        branch: 'শাখা',
+        employee: 'কর্মচারী',
+        selectBranch: 'শাখা নির্বাচন করুন',
+        selectEmp: 'কর্মচারী নির্বাচন করুন',
+
+        cash: 'ক্যাশ',
+        mada: 'মাদা',
+        visa: 'ভিসা/মাস্টার',
+        tabby: 'ট্যাবি',
+        tamara: 'তামারা',
+        rajhi: 'রাজিকি ট্রান্সফার',
+        tap: 'Tap',
+        madfu: 'Madfu',
+        inmaa: 'ইনমা ট্রান্সফার',
+
+        hint: 'সঠিক ঘরে সব পরিমাণ লিখুন',
+        totalLabel: 'মোট (কর্মচারী দ্বারা প্রবেশ)',
+        notes: 'নোটস (ঐচ্ছিক)',
+        notesPH: 'যে কোনও নোট লিখুন...',
+        photo: 'সব মিল ও সিস্টেম এক্সট্র্যাক্ট আপলোড করুন',
+        footer: 'সমস্ত অধিকার সংরক্ষিত | ইন-হাউস নির্মিত',
+
+        btnReview: 'এন্ট্রি নিশ্চিত করুন',
+        btnSend: 'দৈনিক বন্ধ পাঠান',
+
+        msgSelectBranch: 'একটি শাখা নির্বাচন করুন',
+        msgSelectEmp: 'একজন কর্মচারী নির্বাচন করুন',
+        msgEnterTotal: 'মোট লিখুন (০ হতে পারে)',
+        msgNeedPhoto: 'দয়া করে ক্যামেরা দিয়ে ছবি তুলুন',
+        msgReviewTip: 'পর্যালোচনা শেষে প্রতিটি ঘর ট্যাপ করুন যতক্ষণ না সবুজ হয়',
+        msgConfirmAll: 'চালিয়ে যেতে সব ঘর নিশ্চিত করুন (সবুজ)',
+        msgUploading: 'আপলোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...',
+        msgSentOk: 'ক্লোজিং সফলভাবে পাঠানো হয়েছে ✅',
+        msgSendFail: 'পাঠানো ব্যর্থ — Zapier পরীক্ষা করুন'
+      }
+    };
+    let currentLang = localStorage.getItem('ui_lang') || 'ar';
+    const t = (key)=> (i18n[currentLang] && i18n[currentLang][key]) || (i18n.ar[key]||key);
+
+    // ======= تهيئة النصوص حسب اللغة =======
+    function applyLang(lang){
+      currentLang = lang || 'ar';
+      localStorage.setItem('ui_lang', currentLang);
+
+      // العنوان
+      $('#title').textContent = t('title');
+
+      // تسميات الحقول الأعلى
+      $('#lblDate').textContent = t('date');
+      $('#lblBranch').textContent = t('branch');
+      $('#lblEmployee').textContent = t('employee');
+
+      // العنصر الأول لقائمة الفرع/الموظف
+      const brFirst = document.querySelector('#branch option[value=""]');
+      if(brFirst) brFirst.textContent = t('selectBranch');
+      const empFirst = document.querySelector('#employee option[value=""]');
+      if(empFirst) empFirst.textContent = t('selectEmp');
+
+      // تسميات خانات المبالغ
+      $('#lblCash').textContent = t('cash');
+      $('#lblMada').textContent = t('mada');
+      $('#lblVisa').textContent = t('visa');
+      $('#lblTabby').textContent = t('tabby');
+      $('#lblTamara').textContent = t('tamara');
+      $('#lblRajhi').textContent = t('rajhi');
+      $('#lblTap').textContent = t('tap');
+      $('#lblMadfu').textContent = t('madfu');
+      $('#lblInmaa').textContent = t('inmaa');
+
+      // نص الملاحظة ومكانها
+      $('#i18n-notes').textContent = t('notes');
+      $('#notes').placeholder = t('notesPH');
+
+      // باقي النصوص
+      $('#i18n-hint').textContent = t('hint');
+      $('#i18n-total').textContent = t('totalLabel');
+      $('#i18n-photo').textContent = t('photo');
+      $('#i18n-footer').textContent = t('footer');
+
+      // زر الإرسال/المراجعة حسب الحالة
+      const btn = $('#btnSend');
+      btn.textContent = (btn.dataset.mode === 'review') ? t('btnReview') : t('btnSend');
+
+      // اتجاه الصفحة
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir  = (currentLang === 'ar') ? 'rtl' : 'ltr';
+    }
+
+    // ====== وظائف التطبيق الأصلية ======
     const getFormData = ()=>{
       return {
-        Date: document.getElementById('date').value || todayLocalISO(),
-        Branch: document.getElementById('branch').value,
-        Employee: document.getElementById('employee').value,
-        Cash: toMoney(parseNum(document.getElementById('cash').value)),
-        Mada: toMoney(parseNum(document.getElementById('mada').value)),
-        Visa_Master: toMoney(parseNum(document.getElementById('visa').value)),
-        Tabby: toMoney(parseNum(document.getElementById('tabby').value)),
-        Tamara: toMoney(parseNum(document.getElementById('tamara').value)),
-        Rajhi_Transfer: toMoney(parseNum(document.getElementById('rajhi').value)),
-        Tap: toMoney(parseNum(document.getElementById('tap').value)),
-        Madfu: toMoney(parseNum(document.getElementById('madfu').value)),
-        Inmaa_Transfer: toMoney(parseNum(document.getElementById('inmaa').value)),
-        Notes: (document.getElementById('notes').value||'').trim(),
-        Total: toMoney(parseNum(document.getElementById('total').value))
+        Date: $('#date').value || todayLocalISO(),
+        Branch: $('#branch').value,
+        Employee: $('#employee').value,
+        Cash: toMoney(parseNum($('#cash').value)),
+        Mada: toMoney(parseNum($('#mada').value)),
+        Visa_Master: toMoney(parseNum($('#visa').value)),
+        Tabby: toMoney(parseNum($('#tabby').value)),
+        Tamara: toMoney(parseNum($('#tamara').value)),
+        Rajhi_Transfer: toMoney(parseNum($('#rajhi').value)),
+        Tap: toMoney(parseNum($('#tap').value)),
+        Madfu: toMoney(parseNum($('#madfu').value)),
+        Inmaa_Transfer: toMoney(parseNum($('#inmaa').value)),
+        Notes: ($('#notes').value||'').trim(),
+        Total: toMoney(parseNum($('#total').value))
       };
-    }
+    };
 
     const toCsvRow = (obj)=>[
       csvEscape(obj.Date),
@@ -235,11 +421,11 @@
     ].join(',');
 
     function showOverlay(text, spinning=true){
-      document.getElementById('ovText').textContent = text || '';
-      document.getElementById('ovSpin').style.display = spinning ? 'block' : 'none';
-      document.getElementById('overlay').style.display = 'flex';
+      $('#ovText').textContent = text || '';
+      $('#ovSpin').style.display = spinning ? 'block' : 'none';
+      $('#overlay').style.display = 'flex';
     }
-    function hideOverlay(){ document.getElementById('overlay').style.display = 'none'; }
+    function hideOverlay(){ $('#overlay').style.display = 'none'; }
 
     async function copyToClipboard(text){
       try{ await navigator.clipboard.writeText(text); return true; }catch(_){
@@ -258,10 +444,9 @@
       }catch(_){ return false; }
     }
 
-    // ====== منطق المراجعة والتأكيد بدون حذف أي ميزة قديمة ======
+    // ====== منطق المراجعة والتأكيد (بدون تغيير) ======
     const amountIds = ['cash','mada','visa','tabby','tamara','rajhi','tap','madfu','inmaa','total'];
-
-    function inReview(){ return document.getElementById('btnSend').dataset.mode !== 'send'; }
+    function inReview(){ return $('#btnSend').dataset.mode !== 'send'; }
 
     function enterReviewMode(){
       amountIds.forEach(id=>{
@@ -293,7 +478,7 @@
           el.dataset.bound = '1';
         }
       });
-      showOverlay('اضغط على كل خانة بعد المراجعة حتى تتحول للإطار الأخضر', false);
+      showOverlay(t('msgReviewTip'), false);
       setTimeout(hideOverlay, 2200);
     }
 
@@ -305,35 +490,34 @@
     }
 
     function updateButtonState(){
-      const btn = document.getElementById('btnSend');
+      const btn = $('#btnSend');
       if(allConfirmed()){
         btn.dataset.mode = 'send';
-        btn.textContent = 'إرسال الإقفال اليومي';
+        btn.textContent = t('btnSend');
       } else {
         btn.dataset.mode = 'review';
-        btn.textContent = 'تأكيد الإدخالات';
+        btn.textContent = t('btnReview');
       }
     }
 
     window.addEventListener('DOMContentLoaded', ()=>{
-      document.getElementById('date').value = todayLocalISO();
-      const btn = document.getElementById('btnSend');
-      btn.dataset.mode = 'review'; // يبدأ بوضع المراجعة
+      $('#date').value = todayLocalISO();
+      const btn = $('#btnSend');
+      btn.dataset.mode = 'review';
+      applyLang(currentLang); // طبق اللغة عند التحميل
     });
 
-    document.getElementById('btnSend').addEventListener('click', async ()=>{
-      const btn = document.getElementById('btnSend');
+    $('#btnSend').addEventListener('click', async ()=>{
+      const btn = $('#btnSend');
       const data = getFormData();
 
-      // تحقق الحقول الأساسية (كما في النسخة الأصلية)
-      if(!data.Branch){ showOverlay('Select a branch', false); setTimeout(hideOverlay, 1800); return; }
-      if(!data.Employee){ showOverlay('Select an employee', false); setTimeout(hideOverlay, 1800); return; }
-      if(document.getElementById('total').value.trim() === ''){ showOverlay('Enter the Total amount (can be 0)', false); setTimeout(hideOverlay, 1800); return; }
+      if(!data.Branch){ showOverlay(t('msgSelectBranch'), false); setTimeout(hideOverlay, 1800); return; }
+      if(!data.Employee){ showOverlay(t('msgSelectEmp'), false); setTimeout(hideOverlay, 1800); return; }
+      if($('#total').value.trim() === ''){ showOverlay(t('msgEnterTotal'), false); setTimeout(hideOverlay, 1800); return; }
 
-      const photoFile = document.getElementById('photo').files[0];
-      if(!photoFile){ showOverlay('Please take a photo with camera', false); setTimeout(hideOverlay, 1800); return; }
+      const photoFile = $('#photo').files[0];
+      if(!photoFile){ showOverlay(t('msgNeedPhoto'), false); setTimeout(hideOverlay, 1800); return; }
 
-      // طور المراجعة
       if(inReview()){
         const anyStyled = amountIds.some(id=>{
           const el = document.getElementById(id);
@@ -341,25 +525,24 @@
         });
         if(!anyStyled) enterReviewMode();
         if(!allConfirmed()){
-          showOverlay('أكمل تأكيد جميع الخانات (إطار أخضر) للمتابعة', false);
+          showOverlay(t('msgConfirmAll'), false);
           setTimeout(hideOverlay, 1800);
           return;
         }
       }
 
-      // ====== الإرسال كما هو سابقًا ======
       const csvRow = toCsvRow(data);
-      const csvText = header + '\n' + csvRow + '\n';
+      const csvText = header + '\\n' + csvRow + '\\n';
       await copyToClipboard(csvText);
 
-      btn.disabled = true; btn.textContent = '... جاري الإرسال ...';
-      showOverlay('Uploading, please wait...', true);
+      btn.disabled = true; btn.textContent = t('msgUploading');
+      showOverlay(t('msgUploading'), true);
 
       const payload = { type:'daily_sales_v1', header, row: csvRow, csv: csvText, json: data };
       const ok = await sendToZapier(payload, photoFile);
 
       if(ok){
-        showOverlay('تم إرسال التقفيلة بنجاح ✅', false);
+        showOverlay(t('msgSentOk'), false);
         // تفريغ الحقول بعد الإرسال الناجح فقط
         document.querySelectorAll('input, select, textarea').forEach(el=>{
           if(el.type === 'date') el.value = todayLocalISO();
@@ -370,17 +553,36 @@
           el.dataset.confirmed = '0';
           el.dataset.reviewValue = '';
         });
-        // أرجع الزر لوضع المراجعة للجولة التالية
         btn.dataset.mode = 'review';
-        btn.textContent = 'تأكيد الإدخالات';
+        btn.textContent = t('btnReview');
         setTimeout(()=>{ hideOverlay(); }, 1800);
       } else {
-        showOverlay('فشل الإرسال — تحقّق من Zapier', false);
+        showOverlay(t('msgSendFail'), false);
         setTimeout(()=>{ hideOverlay(); }, 2600);
       }
 
       btn.disabled = false;
     });
+
+    // ===== محوّل اللغة (زر 🌐) =====
+    const langBtn = document.getElementById('langBtn');
+    const langMenu = document.getElementById('langMenu');
+    if(langBtn && langMenu){
+      langBtn.addEventListener('click', ()=>{ 
+        langMenu.style.display = (langMenu.style.display==='block') ? 'none' : 'block'; 
+      });
+      langMenu.addEventListener('click', (e)=>{ 
+        const l = e.target.dataset.lang; 
+        if(!l) return; 
+        applyLang(l); 
+        langMenu.style.display='none'; 
+      });
+      document.addEventListener('click', (e)=>{ 
+        if(!langMenu.contains(e.target) && e.target!==langBtn){ 
+          langMenu.style.display='none'; 
+        } 
+      });
+    }
   </script>
 </body>
 </html>
