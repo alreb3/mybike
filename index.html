@@ -273,6 +273,7 @@
         el.classList.add('confirm-pending');
         if(!el.dataset.bound){
           el.addEventListener('input', ()=>{
+            el.dataset.reviewValue = el.value ?? '';
             el.dataset.confirmed = '0';
             el.classList.remove('confirm-ok');
             el.classList.add('confirm-pending');
@@ -359,14 +360,26 @@
 
       if(ok){
         showOverlay('تم إرسال التقفيلة بنجاح ✅', false);
+        // تفريغ الحقول بعد الإرسال الناجح فقط
+        document.querySelectorAll('input, select, textarea').forEach(el=>{
+          if(el.type === 'date') el.value = todayLocalISO();
+          else if(el.tagName.toLowerCase() === 'select') el.selectedIndex = 0;
+          else if(el.type !== 'button' && el.type !== 'submit' && el.type !== 'file') el.value = '';
+          if(el.type === 'file') el.value = '';
+          el.classList.remove('confirm-ok','confirm-pending');
+          el.dataset.confirmed = '0';
+          el.dataset.reviewValue = '';
+        });
+        // أرجع الزر لوضع المراجعة للجولة التالية
+        btn.dataset.mode = 'review';
+        btn.textContent = 'تأكيد الإدخالات';
         setTimeout(()=>{ hideOverlay(); }, 1800);
       } else {
         showOverlay('فشل الإرسال — تحقّق من Zapier', false);
         setTimeout(()=>{ hideOverlay(); }, 2600);
       }
 
-      btn.disabled = false; btn.textContent = 'إرسال الإقفال اليومي';
-      btn.dataset.mode = 'send'; // يظل في وضع الإرسال لأن كل شيء مؤكّد
+      btn.disabled = false;
     });
   </script>
 </body>
